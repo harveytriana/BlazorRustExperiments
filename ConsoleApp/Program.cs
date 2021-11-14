@@ -23,10 +23,12 @@ class RustTest
 
     [DllImport(RUSTLIB)] static extern int counter();
 
-    [DllImport(RUSTLIB)] static extern ShapeStruct get_simple_struct();
+    [DllImport(RUSTLIB)] static extern Parallelepiped get_any_parallelepiped();
+    
+    [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct ShapeStruct
+    public struct Parallelepiped
     {
         public float length;
         public float width;
@@ -48,11 +50,15 @@ class RustTest
         Console.WriteLine("{0}", counter());
         Console.WriteLine("{0}", counter());
 
-        Console.WriteLine("\nREAD STRUCT");
-        var shape = get_simple_struct();
-        Console.WriteLine("Length : {0}", shape.length);
-        Console.WriteLine("Width  : {0}", shape.width);
-        Console.WriteLine("Height : {0}", shape.height);
+        Console.WriteLine("\nSTRUCT SAMPLE");
+        // call rust functions
+        var parallelepiped = get_any_parallelepiped();
+        var volume = get_parallelepiped_volume(parallelepiped);
+        // show it
+        Console.WriteLine("Length : {0}", parallelepiped.length);
+        Console.WriteLine("Width  : {0}", parallelepiped.width);
+        Console.WriteLine("Height : {0}", parallelepiped.height);
+        Console.WriteLine("Volume : {0:N2}", volume);
     }
 }
 #endregion

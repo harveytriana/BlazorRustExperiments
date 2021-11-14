@@ -35,17 +35,23 @@ pub extern "C" fn counter() -> i32 {
 
 // structurs
 #[repr(C)]
-pub struct ShapeStruct {
+pub struct Parallelepiped {
     pub length: f32,
     pub width: f32,
     pub height: f32,
 }
 
 #[no_mangle]
-pub extern "C" fn get_simple_struct() -> ShapeStruct {
-    ShapeStruct {
+pub extern "C" fn get_any_parallelepiped() -> Parallelepiped {
+    Parallelepiped {
         length: 1.2,
         width: 2.2,
         height: 1.9,
     }
+}
+
+#[no_mangle]
+pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
+    let volume = p.length * p.width * p.height;
+    return volume;
 }
