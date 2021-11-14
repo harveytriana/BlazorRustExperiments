@@ -33,16 +33,19 @@ pub extern "C" fn counter() -> i32 {
     }
 }
 
+// structurs
 #[repr(C)]
-pub struct SampleStruct {
-    pub field_one: i16,
-    pub field_two: i32,
+pub struct ShapeStruct {
+    pub length: f32,
+    pub width: f32,
+    pub height: f32,
 }
 
 #[no_mangle]
-pub extern "C" fn get_simple_struct() -> SampleStruct {
-    SampleStruct {
-        field_one: 1,
-        field_two: 2,
+pub extern "C" fn get_simple_struct() -> ShapeStruct {
+    ShapeStruct {
+        length: 1.2,
+        width: 2.2,
+        height: 1.9,
     }
 }

@@ -23,18 +23,19 @@ class RustTest
 
     [DllImport(RUSTLIB)] static extern int counter();
 
-    [DllImport(RUSTLIB)] static extern SampleStruct get_simple_struct();
+    [DllImport(RUSTLIB)] static extern ShapeStruct get_simple_struct();
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SampleStruct
+    public struct ShapeStruct
     {
-        public short field_one;
-        public int field_two;
+        public float length;
+        public float width;
+        public float height;
     }
 
     public static void Run()
     {
-        Console.WriteLine("greetings subrutine:"); 
+        Console.WriteLine("greetings subrutine:");
         greeting(); // rust writes in console
 
         // rust executes a math formula
@@ -48,9 +49,10 @@ class RustTest
         Console.WriteLine("{0}", counter());
 
         Console.WriteLine("\nREAD STRUCT");
-        var simple_struct = get_simple_struct();
-        Console.WriteLine(simple_struct.field_one);
-        Console.WriteLine(simple_struct.field_two);
+        var shape = get_simple_struct();
+        Console.WriteLine("Length : {0}", shape.length);
+        Console.WriteLine("Width  : {0}", shape.width);
+        Console.WriteLine("Height : {0}", shape.height);
     }
 }
 #endregion
