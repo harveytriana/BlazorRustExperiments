@@ -3,7 +3,7 @@
  */
 using System.Runtime.InteropServices;
 
-Console.WriteLine("Console Application Esperiments\n");
+Console.WriteLine("Calling Rust Experiments\n");
 
 RustTest.Run();
 
@@ -25,7 +25,6 @@ class RustTest
 
     public static void Run()
     {
-        Console.WriteLine("\nCalling Rust Experiments");
         Console.WriteLine("greetings subrutine:"); 
         greeting(); // rust writes in console
 
