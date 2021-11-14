@@ -23,6 +23,15 @@ class RustTest
 
     [DllImport(RUSTLIB)] static extern int counter();
 
+    [DllImport(RUSTLIB)] static extern SampleStruct get_simple_struct();
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SampleStruct
+    {
+        public short field_one;
+        public int field_two;
+    }
+
     public static void Run()
     {
         Console.WriteLine("greetings subrutine:"); 
@@ -37,6 +46,11 @@ class RustTest
         Console.WriteLine("{0}", counter());
         Console.WriteLine("{0}", counter());
         Console.WriteLine("{0}", counter());
+
+        Console.WriteLine("\nREAD STRUCT");
+        var simple_struct = get_simple_struct();
+        Console.WriteLine(simple_struct.field_one);
+        Console.WriteLine(simple_struct.field_two);
     }
 }
 #endregion

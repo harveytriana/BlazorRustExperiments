@@ -32,3 +32,17 @@ pub extern "C" fn counter() -> i32 {
         return COUNTER;
     }
 }
+
+#[repr(C)]
+pub struct SampleStruct {
+    pub field_one: i16,
+    pub field_two: i32,
+}
+
+#[no_mangle]
+pub extern "C" fn get_simple_struct() -> SampleStruct {
+    SampleStruct {
+        field_one: 1,
+        field_two: 2,
+    }
+}

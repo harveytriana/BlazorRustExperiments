@@ -9,13 +9,15 @@ authors = ["Harvey Triana <harveytriana@gmail.com>"]
 name="rust_library"
 
 # WebAssembly
+# -----------------------------------------------------------------
 # must be commented the line for dylib. This creates rstlib.a
 # compile: cargo build --target wasm32-unknown-emscripten --release
-crate-type = ["staticlib"]
+# crate-type = ["staticlib"]
 
 # Console
+# -----------------------------------------------------------------
 # must be commented the line for staticlib. This creates rstlib.dll
 # compile: > cargo build --release
-# crate-type = ["dylib"]
+crate-type = ["dylib"]
 
 [dependencies]
