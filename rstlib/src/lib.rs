@@ -63,5 +63,15 @@ use std::ffi::CStr;
 pub extern "C" fn hello(name: *const i8) {
     let s: &CStr = unsafe { CStr::from_ptr(name) };
     let n = s.to_str().unwrap();
+
     println!("Hello '{}'!", n);
+}
+
+use std::os::raw::c_char;
+
+#[no_mangle]
+pub extern "C" fn print_string(text_pointer: *const c_char) {
+    let c_str = unsafe { CStr::from_ptr(text_pointer) };
+    let r_str = c_str.to_str().unwrap();
+    println!("{}", r_str.to_string());
 }

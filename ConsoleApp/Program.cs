@@ -2,6 +2,7 @@
  * Welcome net6 
  */
 using System.Runtime.InteropServices;
+using System.Text;
 
 Console.WriteLine("Calling Rust Experiments\n");
 
@@ -29,6 +30,7 @@ class RustTest
 
     [DllImport(RUSTLIB)] static extern void hello(string name);
 
+    [DllImport(RUSTLIB, CharSet = CharSet.Unicode)] static extern void print_string(byte[] utf8Text);
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Parallelepiped
@@ -67,7 +69,20 @@ class RustTest
         Console.WriteLine("\nSTRINGS");
         hello("Ozzy");
 
-        //TODO accept utf8, eg « Ozzy »
+        Console.WriteLine("\nTry extended characters");
+        try {
+            // hello("« Sabbath »");
+            print_string(Encoding.UTF8.GetBytes("« Sabbath »"));
+        }
+        catch 
+        {
+            // Try extended characters
+            // thread '<unnamed>' panicked at 'called `Result::unwrap()` on an `Err` value: Utf8Error { valid_up_to: 0, error_len: Some(1) }', src\lib.rs:75:32
+            // note: run with `RUST_BACKTRACE = 1` environment variable to display a backtrace
+        }
+
+        //TODO must accept utf8, eg « Ozzy »
+        // maybe: https://stackoverflow.com/questions/66582380/pass-string-from-c-sharp-to-rust-using-ffi
     }
 }
 #endregion
