@@ -30,7 +30,9 @@ class RustTest
 
     [DllImport(RUSTLIB)] static extern void hello(string name);
 
-    [DllImport(RUSTLIB, CharSet = CharSet.Unicode)] static extern void print_string(byte[] utf8Text);
+    //ok: [DllImport(RUSTLIB)] static extern void print_string(byte[] utf8Text);
+
+    [DllImport(RUSTLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Parallelepiped
@@ -71,8 +73,8 @@ class RustTest
 
         Console.WriteLine("\nTry extended characters");
         try {
-            // hello("« Sabbath »");
-            print_string(Encoding.UTF8.GetBytes("« Sabbath »"));
+            //ok: print_string("« Sabbath »".Utf8Text());
+            print_string("« Sabbath »");
         }
         catch 
         {
@@ -86,3 +88,11 @@ class RustTest
     }
 }
 #endregion
+
+static class Extensions
+{
+    public static byte[] Utf8Text(this string text)
+    {
+        return Encoding.UTF8.GetBytes(text);
+    }
+}
