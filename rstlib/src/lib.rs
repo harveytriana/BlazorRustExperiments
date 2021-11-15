@@ -1,4 +1,4 @@
-// #![allow(dead_code)]
+#![allow(dead_code)]
 /*
 ----------------------------------------------------
 Interoperability exercise
@@ -116,12 +116,12 @@ pub struct Person {
     last_name: String,
     age: i32,
 }
-// impl Person {
-//     fn full_name(&self) -> String {
-//         let s = format!("{} {}", self.first_name, self.last_name);
-//         s
-//     }
-// }
+impl Person {
+    fn full_name(&self) -> String {
+        let s = format!("{} {}", self.first_name, self.last_name);
+        s
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User {
@@ -132,6 +132,7 @@ pub struct User {
 
 #[no_mangle]
 // return -> User lock by not FFI-safe. Then we return JSON
+// Then it is solved by returning JSON, and thus all the complexity is eliminated
 pub fn get_user(user_id: i32) -> *mut c_char {
     let user = User {
         user_id: user_id, // simulate
@@ -143,6 +144,7 @@ pub fn get_user(user_id: i32) -> *mut c_char {
             age: 33,
         },
     };
+    
     let json = serde_json::to_string(&user).unwrap();
     let encode = CString::new(json).expect("CString::new failed!");
     encode.into_raw()
