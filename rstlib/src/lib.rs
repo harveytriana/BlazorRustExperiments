@@ -56,18 +56,18 @@ pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
     return volume;
 }
 
-use std::ffi::CStr;
-
 // strings
+use std::ffi::CStr;
+use std::os::raw::c_char;
+
 #[no_mangle]
 pub extern "C" fn hello(name: *const i8) {
+    // does not suppor extended charatters
     let s: &CStr = unsafe { CStr::from_ptr(name) };
     let n = s.to_str().unwrap();
 
     println!("Hello '{}'!", n);
 }
-
-use std::os::raw::c_char;
 
 #[no_mangle]
 pub extern "C" fn print_string(text_pointer: *const c_char) {

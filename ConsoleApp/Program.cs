@@ -28,11 +28,9 @@ class RustTest
 
     [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 
-    [DllImport(RUSTLIB)] static extern void hello(string name);
-
-    //ok: [DllImport(RUSTLIB)] static extern void print_string(byte[] utf8Text);
-
     [DllImport(RUSTLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    // OR **
+    // [DllImport(RUSTLIB)] static extern void print_string(byte[] utf8Text);
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Parallelepiped
@@ -69,30 +67,23 @@ class RustTest
 
         // strings
         Console.WriteLine("\nSTRINGS");
-        hello("Ozzy");
+        Console.WriteLine("\nBasic");
+        print_string("Hello");
 
         Console.WriteLine("\nTry extended characters");
-        try {
-            //ok: print_string("« Sabbath »".Utf8Text());
-            print_string("« Sabbath »");
-        }
-        catch 
-        {
-            // Try extended characters
-            // thread '<unnamed>' panicked at 'called `Result::unwrap()` on an `Err` value: Utf8Error { valid_up_to: 0, error_len: Some(1) }', src\lib.rs:75:32
-            // note: run with `RUST_BACKTRACE = 1` environment variable to display a backtrace
-        }
+        print_string("« Esto es un árbol »");
 
-        //TODO must accept utf8, eg « Ozzy »
-        // maybe: https://stackoverflow.com/questions/66582380/pass-string-from-c-sharp-to-rust-using-ffi
+        // ** ok: but moore complexity
+        // print_string("« Esto es un árbol »".Utf8Text());
     }
 }
 #endregion
 
-static class Extensions
-{
-    public static byte[] Utf8Text(this string text)
-    {
-        return Encoding.UTF8.GetBytes(text);
-    }
-}
+// ok
+//static class Extensions
+//{
+//    public static byte[] Utf8Text(this string text)
+//    {
+//        return Encoding.UTF8.GetBytes(text);
+//    }
+//}

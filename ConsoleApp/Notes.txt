@@ -1,0 +1,16 @@
+﻿
+
+Console.WriteLine("\nTry extended characters");
+try {
+    //ok: print_string("« Sabbath »".Utf8Text());
+    print_string("« Sabbath »");
+}
+catch 
+{
+    // Try extended characters
+    // thread '<unnamed>' panicked at 'called `Result::unwrap()` on an `Err` value: Utf8Error { valid_up_to: 0, error_len: Some(1) }', src\lib.rs:75:32
+    // note: run with `RUST_BACKTRACE = 1` environment variable to display a backtrace
+}
+
+//TODO must accept utf8, eg « Ozzy »
+// maybe: https://stackoverflow.com/questions/66582380/pass-string-from-c-sharp-to-rust-using-ffi

@@ -1,0 +1,12 @@
+
+Also works, but  does not suppor extended charatters
+
+// strings
+use std::ffi::CStr;
+
+#[no_mangle]
+pub extern "C" fn hello(name: *const i8) {
+    let s: &CStr = unsafe { CStr::from_ptr(name) };
+    let n = s.to_str().unwrap();
+    println!("Hello '{}'!", n);
+}
