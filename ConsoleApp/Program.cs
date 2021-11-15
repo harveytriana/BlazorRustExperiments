@@ -34,6 +34,8 @@ class RustTest
 
     [DllImport(RUSTLIB)] static extern IntPtr string_test();
 
+    [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
+
     [StructLayout(LayoutKind.Sequential)]
     public struct Parallelepiped
     {
@@ -85,7 +87,11 @@ class RustTest
         var text = Marshal.PtrToStringUTF8(encodeText);
 
         Console.WriteLine("Encode String : {0}", encodeText);
-        Console.WriteLine("Decode String : {0}", text); 
+        Console.WriteLine("Decode String : {0}", text);
+
+        encodeText = describe_person(18);
+        text = Marshal.PtrToStringUTF8(encodeText);
+        Console.WriteLine("Decode String : {0}", text);
     }
 }
 #endregion

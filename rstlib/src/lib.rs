@@ -76,10 +76,21 @@ use std::ffi::CString;
 
 #[no_mangle]
 pub extern "C" fn string_test() -> *mut c_char {
-    let c_to_print =
-        CString::new("« Sin música, la vida sería un error »").expect("CString::new failed!");
-    let r = c_to_print;
-    r.into_raw()
+    let s = CString::new("« Sin música, la vida sería un error »").expect("CString::new failed!");
+    s.into_raw()
+}
+
+#[no_mangle]
+pub extern "C" fn describe_person(age: i32) -> *mut c_char {
+    let result = match age {
+        a if a < 0 => "Unexpected",
+        0..=12 => "Clild",
+        13..=17 => "Teenager",
+        18..=65 => "Adult",
+        _ => "Elderly",
+    };
+    let encode = CString::new(result).expect("CString::new failed!");
+    encode.into_raw()
 }
 
 // not FFI-safe -> &str
