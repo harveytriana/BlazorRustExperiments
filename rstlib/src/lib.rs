@@ -55,3 +55,13 @@ pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
     let volume = p.length * p.width * p.height;
     return volume;
 }
+
+use std::ffi::CStr;
+
+// strings
+#[no_mangle]
+pub extern "C" fn hello(name: *const i8) {
+    let s: &CStr = unsafe { CStr::from_ptr(name) };
+    let n = s.to_str().unwrap();
+    println!("Hello '{}'!", n);
+}

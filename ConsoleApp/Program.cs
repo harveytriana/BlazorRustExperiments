@@ -24,8 +24,11 @@ class RustTest
     [DllImport(RUSTLIB)] static extern int counter();
 
     [DllImport(RUSTLIB)] static extern Parallelepiped get_any_parallelepiped();
-    
+
     [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
+
+    [DllImport(RUSTLIB)] static extern void hello(string name);
+
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Parallelepiped
@@ -59,6 +62,12 @@ class RustTest
         Console.WriteLine("Width  : {0}", parallelepiped.width);
         Console.WriteLine("Height : {0}", parallelepiped.height);
         Console.WriteLine("Volume : {0:N2}", volume);
+
+        // strings
+        Console.WriteLine("\nSTRINGS");
+        hello("Ozzy");
+
+        //TODO accept utf8, eg « Ozzy »
     }
 }
 #endregion
