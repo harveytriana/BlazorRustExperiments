@@ -2,7 +2,7 @@
  * Welcome net6 
  */
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Text.Json;
 
 Console.WriteLine("Calling Rust Experiments\n");
 
@@ -36,6 +36,9 @@ class RustTest
 
     [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
 
+    [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
+
+    // DATA OBJECTS
     [StructLayout(LayoutKind.Sequential)]
     public struct Parallelepiped
     {
@@ -43,6 +46,9 @@ class RustTest
         public float width;
         public float height;
     }
+
+    record Person(int person_id, int age, string full_name);
+    record User(int user_id, string password, Person person);
 
     public static void Run()
     {
@@ -69,7 +75,8 @@ class RustTest
         Console.WriteLine("Height : {0}", parallelepiped.height);
         Console.WriteLine("Volume : {0:N2}", volume);
 
-        // strings
+        // STRINGS
+        // ---------------------------------------------------------
         Console.WriteLine("\nSTRINGS");
         Console.WriteLine("\nBasic");
         print_string("Hello");
@@ -82,7 +89,7 @@ class RustTest
 
         // getting a string from lib
         Console.WriteLine("\nTry to get a string from library");
-        
+
         var encodeText = string_test();
         var text = Marshal.PtrToStringUTF8(encodeText);
 
@@ -91,16 +98,22 @@ class RustTest
 
         encodeText = describe_person(18);
         text = Marshal.PtrToStringUTF8(encodeText);
-        Console.WriteLine("Decode String : {0}", text);
+        Console.WriteLine("describe_person(18) : {0}", text);
+
+        // COMPOSED OBJECTS
+        // ---------------------------------------------------------
+        Console.WriteLine("\nTry to get a object from library");
+
+        var jsPointer = get_user(79);
+        var js = Marshal.PtrToStringUTF8(jsPointer);
+
+        Console.WriteLine("js: {0}", js);
+        //Console.WriteLine("js: {0}", js![..20]);
+
+        var user = JsonSerializer.Deserialize<User>(js);
+
+        Console.WriteLine("User: {0}", user);
     }
 }
-#endregion
 
-// ok
-//static class Extensions
-//{
-//    public static byte[] Utf8Text(this string text)
-//    {
-//        return Encoding.UTF8.GetBytes(text);
-//    }
-//}
+#endregion

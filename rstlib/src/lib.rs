@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 /*
 ----------------------------------------------------
 Interoperability exercise
@@ -92,26 +94,58 @@ pub extern "C" fn describe_person(age: i32) -> *mut c_char {
     let encode = CString::new(result).expect("CString::new failed!");
     encode.into_raw()
 }
-
+// NOTE
 // not FFI-safe -> &str
 /*
 #[no_mangle]
 pub extern "C" fn describe_person(age: &i16) -> &str {
-    match age {
-        0..=12 => "Clild",
-        13..=17 => "Teenager",
-        18..=65 => "Adult",
-        _ => "Elderly",
+...
+}
+*/
+
+// Objects
+// ------------------------------------------------------
+// class
+extern crate serde;
+extern crate serde_json;
+
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Person {
+    person_id: i32,
+    first_name: String,
+    last_name: String,
+    age: i32,
+}
+impl Person {
+    fn full_name(&self) -> String {
+        let s = format!("{} {}", self.first_name, self.last_name);
+        s
     }
 }
 
-warning: `extern` fn uses type `str`, which is not FFI-safe
-  --> src\lib.rs:76:49
-   |
-76 | pub extern "C" fn describe_person(age: &i16) -> &str {
-   |                                                 ^^^^ not FFI-safe
-   |
-   = note: `#[warn(improper_ctypes_definitions)]` on by default
-   = help: consider using `*const u8` and a length instead
-   = note: string slices have no C equivalent
-*/
+#[derive(Serialize, Deserialize, Debug)]
+pub struct User {
+    user_id: i32,
+    password: String,
+    person: Person,
+}
+
+#[no_mangle]
+// return -> User lock by not FFI-safe. Then we return JSON
+pub extern "C" fn get_user(user_id: i32) -> *mut c_char {
+    let user = User {
+        user_id: user_id, // simulate
+        password: "hashed password".to_string(),
+        person: Person {
+            person_id: 79296125,
+            first_name: "Karl".to_string(),
+            last_name: "Sagan".to_string(),
+            age: 33,
+        },
+    };
+    let json = serde_json::to_string(&user).unwrap();
+    let encode = CString::new(json).expect("CString::new failed!");
+    encode.into_raw()
+}
