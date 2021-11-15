@@ -10,12 +10,14 @@ cargo build --target wasm32-unknown-emscripten --release
 ----------------------------------------------------
 */
 // basic test
+// -------------------------------------------------------
 #[no_mangle]
 pub extern "C" fn greeting() {
     println!("Hello World!");
 }
 
 // math function
+// -------------------------------------------------------
 #[no_mangle]
 pub fn hypotenuse(x: f32, y: f32) -> f32 {
     let num = x.powi(2) + y.powi(2);
@@ -23,6 +25,7 @@ pub fn hypotenuse(x: f32, y: f32) -> f32 {
 }
 
 // shared variable
+// -------------------------------------------------------
 static mut COUNTER: i32 = 0;
 
 #[no_mangle]
@@ -34,6 +37,7 @@ pub extern "C" fn counter() -> i32 {
 }
 
 // structurs
+// -------------------------------------------------------
 #[repr(C)]
 pub struct Parallelepiped {
     pub length: f32,
@@ -57,21 +61,46 @@ pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
 }
 
 // strings
+// ------------------------------------------------------
 use std::ffi::CStr;
 use std::os::raw::c_char;
-
-#[no_mangle]
-pub extern "C" fn hello(name: *const i8) {
-    // does not suppor extended charatters
-    let s: &CStr = unsafe { CStr::from_ptr(name) };
-    let n = s.to_str().unwrap();
-
-    println!("Hello '{}'!", n);
-}
 
 #[no_mangle]
 pub extern "C" fn print_string(text_pointer: *const c_char) {
     let c_str = unsafe { CStr::from_ptr(text_pointer) };
     let r_str = c_str.to_str().unwrap();
-    println!("{}", r_str.to_string());
+    println!("Print from Rust: {}", r_str.to_string());
 }
+
+use std::ffi::CString;
+
+#[no_mangle]
+pub extern "C" fn string_test() -> *mut c_char {
+    let c_to_print =
+        CString::new("« Sin música, la vida sería un error »").expect("CString::new failed!");
+    let r = c_to_print;
+    r.into_raw()
+}
+
+// not FFI-safe -> &str
+/*
+#[no_mangle]
+pub extern "C" fn describe_person(age: &i16) -> &str {
+    match age {
+        0..=12 => "Clild",
+        13..=17 => "Teenager",
+        18..=65 => "Adult",
+        _ => "Elderly",
+    }
+}
+
+warning: `extern` fn uses type `str`, which is not FFI-safe
+  --> src\lib.rs:76:49
+   |
+76 | pub extern "C" fn describe_person(age: &i16) -> &str {
+   |                                                 ^^^^ not FFI-safe
+   |
+   = note: `#[warn(improper_ctypes_definitions)]` on by default
+   = help: consider using `*const u8` and a length instead
+   = note: string slices have no C equivalent
+*/

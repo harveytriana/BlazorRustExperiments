@@ -32,6 +32,8 @@ class RustTest
     // OR **
     // [DllImport(RUSTLIB)] static extern void print_string(byte[] utf8Text);
 
+    [DllImport(RUSTLIB)] static extern IntPtr string_test();
+
     [StructLayout(LayoutKind.Sequential)]
     public struct Parallelepiped
     {
@@ -71,10 +73,19 @@ class RustTest
         print_string("Hello");
 
         Console.WriteLine("\nTry extended characters");
-        print_string("« Esto es un árbol »");
+        print_string("« Sin música, la vida sería un error »");
 
         // ** ok: but moore complexity
         // print_string("« Esto es un árbol »".Utf8Text());
+
+        // getting a string from lib
+        Console.WriteLine("\nTry to get a string from library");
+        
+        var encodeText = string_test();
+        var text = Marshal.PtrToStringUTF8(encodeText);
+
+        Console.WriteLine("Encode String : {0}", encodeText);
+        Console.WriteLine("Decode String : {0}", text); 
     }
 }
 #endregion
