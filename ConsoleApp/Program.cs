@@ -47,7 +47,7 @@ class RustTest
         public float height;
     }
 
-    record Person(int person_id, int age, string full_name);
+    record Person(int person_id, int age, string first_name, string last_name, string full_name);
     record User(int user_id, string password, Person person);
 
     public static void Run()
@@ -90,29 +90,28 @@ class RustTest
         // getting a string from lib
         Console.WriteLine("\nTry to get a string from library");
 
-        var encodeText = string_test();
-        var text = Marshal.PtrToStringUTF8(encodeText);
+        var p = string_test();
+        var text = Marshal.PtrToStringUTF8(p);
 
-        Console.WriteLine("Encode String : {0}", encodeText);
+        Console.WriteLine("Encode String : {0}", p);
         Console.WriteLine("Decode String : {0}", text);
 
-        encodeText = describe_person(18);
-        text = Marshal.PtrToStringUTF8(encodeText);
+        p = describe_person(18);
+        text = Marshal.PtrToStringUTF8(p);
         Console.WriteLine("describe_person(18) : {0}", text);
 
         // COMPOSED OBJECTS
         // ---------------------------------------------------------
-        Console.WriteLine("\nTry to get a object from library");
+        Console.WriteLine("\nCOMPOSED OBJECTS");
 
         var jsPointer = get_user(79);
-        var js = Marshal.PtrToStringUTF8(jsPointer);
-
-        Console.WriteLine("js: {0}", js);
-        //Console.WriteLine("js: {0}", js![..20]);
-
+        var js = jsPointer.TextFromPointer() ?? string.Empty;
         var user = JsonSerializer.Deserialize<User>(js);
 
-        Console.WriteLine("User: {0}", user);
+        Console.WriteLine("Json data       : {0} ... }}", js![..40]);
+        Console.WriteLine("User identifier : {0}", user?.user_id);
+        Console.WriteLine("User first name : {0}", user?.person.first_name);
+        Console.WriteLine("User last name  : {0}", user?.person.last_name);
     }
 }
 
