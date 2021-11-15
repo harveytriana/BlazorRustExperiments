@@ -363,4 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # rust compilations
-# /target
+!*/target
