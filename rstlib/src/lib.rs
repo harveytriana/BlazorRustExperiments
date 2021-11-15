@@ -1,13 +1,15 @@
 #![allow(dead_code)]
 /*
-----------------------------------------------------
+----------------------------------------------------------
 Interoperability exercise
 COMPILE for dll
-cargo build --release
+1. Change to crate-type = ["dylib"] in Cargo.toml (see the comments)
+2. cargo build --release
 
 COMPILE for WebAssembly
-cargo build --target wasm32-unknown-emscripten --release
-----------------------------------------------------
+1. Change to crate-type = ["staticlib"] in Cargo.toml (see the comments)
+2. cargo build --target wasm32-unknown-emscripten --release
+----------------------------------------------------------
 */
 // basic test
 // -------------------------------------------------------
@@ -144,7 +146,6 @@ pub fn get_user(user_id: i32) -> *mut c_char {
             age: 33,
         },
     };
-    
     let json = serde_json::to_string(&user).unwrap();
     let encode = CString::new(json).expect("CString::new failed!");
     encode.into_raw()
