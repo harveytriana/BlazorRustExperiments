@@ -1,20 +1,18 @@
-#![allow(dead_code)]
-
+// #![allow(dead_code)]
 /*
 ----------------------------------------------------
 Interoperability exercise
-COMPILE
-.dll
+COMPILE for dll
 cargo build --release
 
-.a (WebAssembly)
+COMPILE for WebAssembly
 cargo build --target wasm32-unknown-emscripten --release
 ----------------------------------------------------
 */
 // basic test
 // -------------------------------------------------------
 #[no_mangle]
-pub extern "C" fn greeting() {
+pub fn greeting() {
     println!("Hello World!");
 }
 
@@ -31,7 +29,7 @@ pub fn hypotenuse(x: f32, y: f32) -> f32 {
 static mut COUNTER: i32 = 0;
 
 #[no_mangle]
-pub extern "C" fn counter() -> i32 {
+pub fn counter() -> i32 {
     unsafe {
         COUNTER += 1;
         return COUNTER;
@@ -48,7 +46,7 @@ pub struct Parallelepiped {
 }
 
 #[no_mangle]
-pub extern "C" fn get_any_parallelepiped() -> Parallelepiped {
+pub fn get_any_parallelepiped() -> Parallelepiped {
     Parallelepiped {
         length: 1.2,
         width: 2.2,
@@ -57,7 +55,7 @@ pub extern "C" fn get_any_parallelepiped() -> Parallelepiped {
 }
 
 #[no_mangle]
-pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
+pub fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
     let volume = p.length * p.width * p.height;
     return volume;
 }
@@ -68,7 +66,7 @@ use std::ffi::CStr;
 use std::os::raw::c_char;
 
 #[no_mangle]
-pub extern "C" fn print_string(text_pointer: *const c_char) {
+pub fn print_string(text_pointer: *const c_char) {
     let c_str = unsafe { CStr::from_ptr(text_pointer) };
     let r_str = c_str.to_str().unwrap();
     println!("Print from Rust: {}", r_str.to_string());
@@ -77,13 +75,13 @@ pub extern "C" fn print_string(text_pointer: *const c_char) {
 use std::ffi::CString;
 
 #[no_mangle]
-pub extern "C" fn string_test() -> *mut c_char {
+pub fn string_test() -> *mut c_char {
     let s = CString::new("« Sin música, la vida sería un error »").expect("CString::new failed!");
     s.into_raw()
 }
 
 #[no_mangle]
-pub extern "C" fn describe_person(age: i32) -> *mut c_char {
+pub fn describe_person(age: i32) -> *mut c_char {
     let result = match age {
         a if a < 0 => "Unexpected",
         0..=12 => "Clild",
@@ -118,12 +116,12 @@ pub struct Person {
     last_name: String,
     age: i32,
 }
-impl Person {
-    fn full_name(&self) -> String {
-        let s = format!("{} {}", self.first_name, self.last_name);
-        s
-    }
-}
+// impl Person {
+//     fn full_name(&self) -> String {
+//         let s = format!("{} {}", self.first_name, self.last_name);
+//         s
+//     }
+// }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User {
@@ -134,7 +132,7 @@ pub struct User {
 
 #[no_mangle]
 // return -> User lock by not FFI-safe. Then we return JSON
-pub extern "C" fn get_user(user_id: i32) -> *mut c_char {
+pub fn get_user(user_id: i32) -> *mut c_char {
     let user = User {
         user_id: user_id, // simulate
         password: "hashed password".to_string(),
