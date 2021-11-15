@@ -46,7 +46,7 @@ pub struct Parallelepiped {
 }
 
 #[no_mangle]
-pub fn get_any_parallelepiped() -> Parallelepiped {
+pub extern "C" fn get_any_parallelepiped() -> Parallelepiped {
     Parallelepiped {
         length: 1.2,
         width: 2.2,
@@ -55,7 +55,7 @@ pub fn get_any_parallelepiped() -> Parallelepiped {
 }
 
 #[no_mangle]
-pub fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
+pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
     let volume = p.length * p.width * p.height;
     return volume;
 }
