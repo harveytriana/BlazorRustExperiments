@@ -49,7 +49,6 @@ pub struct Parallelepiped {
 
 #[no_mangle]
 pub extern "C" fn get_any_parallelepiped() -> Parallelepiped {
-    println!("** Will return a PArallelepiped");
     Parallelepiped {
         length: 1.2,
         width: 2.2,

@@ -6,7 +6,8 @@ using System.Text.Json;
 
 Console.WriteLine("Calling Rust Experiments\n");
 
-RustTest.Run();
+// RustTest.Run();
+RustTestStruct.Run();
 
 Console.WriteLine("\nReady");
 
@@ -24,10 +25,6 @@ class RustTest
 
     [DllImport(RUSTLIB)] static extern int counter();
 
-    [DllImport(RUSTLIB)] static extern Parallelepiped get_any_parallelepiped();
-
-    [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
-
     [DllImport(RUSTLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
     // OR **
     // [DllImport(RUSTLIB)] static extern void print_string(byte[] utf8Text);
@@ -37,15 +34,6 @@ class RustTest
     [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
 
     [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
-
-    // DATA OBJECTS
-    [StructLayout(LayoutKind.Sequential)]
-    struct Parallelepiped
-    {
-        public float length;
-        public float width;
-        public float height;
-    }
 
     record Person(int person_id, int age, string first_name, string last_name, string full_name);
     record User(int user_id, string password, Person person);
@@ -64,16 +52,6 @@ class RustTest
         Console.WriteLine("{0}", counter());
         Console.WriteLine("{0}", counter());
         Console.WriteLine("{0}", counter());
-
-        Console.WriteLine("\nSTRUCT SAMPLE");
-        // call rust functions
-        var parallelepiped = get_any_parallelepiped();
-        var volume = get_parallelepiped_volume(parallelepiped);
-        // show it
-        Console.WriteLine("Length : {0}", parallelepiped.length);
-        Console.WriteLine("Width  : {0}", parallelepiped.width);
-        Console.WriteLine("Height : {0}", parallelepiped.height);
-        Console.WriteLine("Volume : {0:N2}", volume);
 
         // STRINGS
         // ---------------------------------------------------------
@@ -116,4 +94,34 @@ class RustTest
     }
 }
 
+
+class RustTestStruct
+{
+    [StructLayout(LayoutKind.Sequential)]
+    struct Parallelepiped
+    {
+        public float length;
+        public float width;
+        public float height;
+    }
+
+    const string RUSTLIB = @"..\..\..\..\rstlib\target\release\rust_library.dll";
+
+    [DllImport(RUSTLIB)] static extern Parallelepiped get_any_parallelepiped();
+
+    [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
+
+    public static void Run()
+    {
+        Console.WriteLine("STRUCT SAMPLE");
+        // call rust functions
+        var parallelepiped = get_any_parallelepiped();
+        var volume = get_parallelepiped_volume(parallelepiped);
+        // show it
+        Console.WriteLine("Length : {0}", parallelepiped.length);
+        Console.WriteLine("Width  : {0}", parallelepiped.width);
+        Console.WriteLine("Height : {0}", parallelepiped.height);
+        Console.WriteLine("Volume : {0:N2}", volume);
+    }
+}
 #endregion
