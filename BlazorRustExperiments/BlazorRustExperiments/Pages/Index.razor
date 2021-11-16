@@ -59,10 +59,10 @@
         var y = 11;
         var h = hypotenuse(x, y);
 
-        Echo("Execute a function passing native parameters:");
         Echo(string.Format("From Rust Library: Hypotenuse({0}, {1}) = {2}\n", x, y, h));
 
         Echo("COUNTER");
+        Echo("An internal variable in Rust library is changing");
         Echo(counter().ToString());
         Echo(counter().ToString());
         Echo(counter().ToString());
@@ -86,37 +86,39 @@
         // STRINGS
         // ---------------------------------------------------------
         Echo("\nSTRINGS");
-        Echo("Basic");
-        print_string("Hello");
+        Echo("Send a text to Rust library. See console output.");
+        print_string("■ Hello from Blazor");
 
-        Echo("\nTry extended characters");
+        Echo("\nSupports extended characters");
         print_string("« Sin música, la vida sería un error »");
 
         // ** ok: but moore complexity
         // print_string("« Esto es un árbol »".Utf8Text());
 
         // getting a string from lib
-        Echo("\nTry to get a string from library");
+        Echo("\nGet a string from library");
 
         var p = string_test();
         var text = Marshal.PtrToStringUTF8(p);
+        // OR
+        //cvar text = p.TextFromPointer();
 
-        Echo(string.Format("Encode String : {0}", p));
-        Echo(string.Format("Decode String : {0}", text));
+        Echo(string.Format("String pointer      : {0}", p));
+        Echo(string.Format("String dereferenced : {0}", text));
 
+        // another funtion that returns a string
         p = describe_person(18);
-        text = Marshal.PtrToStringUTF8(p);
-        Echo(string.Format("describe_person(18) : {0}", text));
+        Echo(string.Format("describe_person(18) : {0}", p.TextFromPointer()));
 
         // COMPOSED OBJECTS
         // ---------------------------------------------------------
         Echo("\nCOMPOSED OBJECTS");
-        
+
         var jsPointer = get_user(79);
         var js = jsPointer.TextFromPointer() ?? string.Empty;
         var user = JsonSerializer.Deserialize<User>(js);
 
-        Echo(string.Format("JSON data obtained from the library:\n{0}\n",  js.PrettyJson()));
+        Echo(string.Format("JSON data obtained from the library:\n{0}\n", js.PrettyJson()));
         Echo(string.Format("User identifier : {0}", user?.user_id));
         Echo(string.Format("User first name : {0}", user?.person.first_name));
         Echo(string.Format("User last name  : {0}", user?.person.last_name));
