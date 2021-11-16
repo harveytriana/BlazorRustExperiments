@@ -1,0 +1,62 @@
+﻿@page "/struct-test"
+@using System.Runtime.InteropServices
+@using System.Text.Json
+
+<PageTitle>Calling Rust Functions - Struct</PageTitle>
+
+<h3>Struct Test</h3>
+<hr />
+<p>Look at the console output in browser development tools</p>
+<pre>@echo</pre>
+
+@code {
+    const string RUSTLIB = "librust_library";
+    
+    // DATA OBJECTS
+    [StructLayout(LayoutKind.Sequential)]
+    struct Parallelepiped
+    {
+        public float length;
+        public float width;
+        public float height;
+    }
+
+    [DllImport(RUSTLIB)] static extern Parallelepiped get_any_parallelepiped();
+
+    [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
+
+    string echo = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Echo("Calling Rust functions\n");
+        await Task.Delay(500);
+
+        //TODO Does not pass this test
+        Echo("STRUCT SAMPLE");
+        Console.WriteLine("Get parallelepiped object");
+        try {
+            var parallelepiped = get_any_parallelepiped();
+            var volume = get_parallelepiped_volume(parallelepiped);
+            // show it
+            Echo(string.Format("Length : {0}", parallelepiped.length));
+            Echo(string.Format("Width  : {0}", parallelepiped.width));
+            Echo(string.Format("Height : {0}", parallelepiped.height));
+            Echo(string.Format("Volume : {0:N2}", volume));
+        }
+        catch (Exception exception) {// not fired
+            Console.WriteLine("Exception: " + exception.Message);
+            Echo("Exception: " + exception.Message);
+        }
+    }
+
+    void Echo(string? message = null)
+    {
+        if (message is null)
+            echo = string.Empty;
+        else {
+            echo += $"{message}\n";
+            StateHasChanged();
+        }
+    }
+}

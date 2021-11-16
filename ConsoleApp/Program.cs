@@ -40,7 +40,7 @@ class RustTest
 
     // DATA OBJECTS
     [StructLayout(LayoutKind.Sequential)]
-    public struct Parallelepiped
+    struct Parallelepiped
     {
         public float length;
         public float width;

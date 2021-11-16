@@ -1,9 +1,8 @@
 ﻿@page "/"
-
-<PageTitle>Index</PageTitle>
-
 @using System.Runtime.InteropServices
 @using System.Text.Json
+
+<PageTitle>Calling Rust Functions</PageTitle>
 
 <h3>Calling Rust Experiments</h3>
 <hr />
@@ -19,10 +18,6 @@
 
     [DllImport(RUSTLIB)] static extern int counter();
 
-    [DllImport(RUSTLIB)] static extern Parallelepiped get_any_parallelepiped();
-
-    [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
-
     [DllImport(RUSTLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
     // OR **
     // [DllImport(RUSTLIB)] static extern void print_string(byte[] utf8Text);
@@ -33,18 +28,8 @@
 
     [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
 
-    // DATA OBJECTS
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Parallelepiped
-    {
-        public float length;
-        public float width;
-        public float height;
-    }
-
     record Person(int person_id, int age, string first_name, string last_name, string full_name);
     record User(int user_id, string password, Person person);
-
 
     string echo = string.Empty;
 
@@ -67,22 +52,6 @@
         Echo(counter().ToString());
         Echo(counter().ToString());
 
-        //TODO Does not pass this test
-        //Echo("\nSTRUCT SAMPLE");
-        //Console.WriteLine("Get parallelepiped object");
-        //try {
-        //    var parallelepiped = get_any_parallelepiped();
-        //    var volume = get_parallelepiped_volume(parallelepiped);
-        //    // show it
-        //    Echo(string.Format("Length : {0}", parallelepiped.length));
-        //    Echo(string.Format("Width  : {0}", parallelepiped.width));
-        //    Echo(string.Format("Height : {0}", parallelepiped.height));
-        //    Echo(string.Format("Volume : {0:N2}", volume));
-        //}
-        //catch (Exception exception) {
-        //    Console.WriteLine("Exception: " + exception.Message);
-        //    Echo("Exception: " + exception.Message);
-        //}
         // STRINGS
         // ---------------------------------------------------------
         Echo("\nSTRINGS");

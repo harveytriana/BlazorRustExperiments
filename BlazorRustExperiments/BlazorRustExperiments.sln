@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorRustExperiments", "BlazorRustExperiments\BlazorRustExperiments.csproj", "{61CEF103-DBF6-4819-B2D8-719C598E5F9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorRustExperiments", "BlazorRustExperiments\BlazorRustExperiments.csproj", "{61CEF103-DBF6-4819-B2D8-719C598E5F9A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "..\ConsoleApp\ConsoleApp.csproj", "{0147D8B1-731F-4A12-BF66-F1CB1D0FF649}"
 EndProject
