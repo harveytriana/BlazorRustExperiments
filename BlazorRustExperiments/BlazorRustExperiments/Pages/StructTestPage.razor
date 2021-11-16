@@ -33,8 +33,9 @@
         await Task.Delay(500);
 
         //TODO Does not pass this test
+        // Uncaught RuntimeError: null function or function signature mismatch
+        // at wasm_invoke_i ...
         Echo("STRUCT SAMPLE");
-        Console.WriteLine("Get parallelepiped object");
         try {
             var parallelepiped = get_any_parallelepiped();
             var volume = get_parallelepiped_volume(parallelepiped);
