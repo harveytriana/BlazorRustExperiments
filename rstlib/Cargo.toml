@@ -10,15 +10,17 @@ name="rust_library"
 
 # WebAssembly
 # -----------------------------------------------------------------
-# must be commented the line for dylib. This creates rstlib.a
+# must be commented the line for dylib.
 # compile: cargo build --target wasm32-unknown-emscripten --release
-# crate-type = ["staticlib"]
+# This creates a .a file in target\wasm32-unknown-emscripten\release
+crate-type = ["staticlib"]
 
 # Console
 # -----------------------------------------------------------------
-# must be commented the line for staticlib. This creates rstlib.dll
+# must be commented the line for staticlib. 
 # compile: > cargo build --release
-crate-type = ["dylib"]
+# This creates a .dll file in target\release
+# crate-type = ["dylib"]
 
 # JSON https://bit.ly/3kBDMok
 

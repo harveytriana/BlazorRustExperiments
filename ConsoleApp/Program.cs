@@ -103,24 +103,13 @@ class RustTest
         // COMPOSED OBJECTS
         // ---------------------------------------------------------
         Console.WriteLine("\nCOMPOSED OBJECTS");
-        /*
-        {
-	      "user_id": 79,
-	      "password": "hashed password",
-	      "person": {
-		      "id": 79296125,
-		      "first_name": "Karl",
-		      "last_name": "Sagan",
-		      "age": 33
-	      }
-        }
-         */
+        
         var jsPointer = get_user(79);
         var js = jsPointer.TextFromPointer() ?? string.Empty;
         var user = JsonSerializer.Deserialize<User>(js);
 
-        //Console.WriteLine("Json data       : {0} ... }}", js![..40]);
-        Console.WriteLine("Json data       : {0}", js);
+        Console.WriteLine("JSON data obtained from the library:\n{0}\n",  js.PrettyJson());
+        Console.WriteLine("Deserialized:");
         Console.WriteLine("User identifier : {0}", user?.user_id);
         Console.WriteLine("User first name : {0}", user?.person.first_name);
         Console.WriteLine("User last name  : {0}", user?.person.last_name);

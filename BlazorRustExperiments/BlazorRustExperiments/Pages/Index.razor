@@ -2,8 +2,133 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+@using System.Runtime.InteropServices
+@using System.Text.Json
 
-Welcome to your new app.
+<h3>Calling Rust Experiments</h3>
+<hr />
+<p>Look at the console output in browser development tools</p>
+<pre>@echo</pre>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+    const string RUSTLIB = "librust_library";
+
+    [DllImport(RUSTLIB)] static extern void greeting();
+
+    [DllImport(RUSTLIB)] static extern float hypotenuse(float x, float y);
+
+    [DllImport(RUSTLIB)] static extern int counter();
+
+    [DllImport(RUSTLIB)] static extern Parallelepiped get_any_parallelepiped();
+
+    [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
+
+    [DllImport(RUSTLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    // OR **
+    // [DllImport(RUSTLIB)] static extern void print_string(byte[] utf8Text);
+
+    [DllImport(RUSTLIB)] static extern IntPtr string_test();
+
+    [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
+
+    [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
+
+    // DATA OBJECTS
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Parallelepiped
+    {
+        public float length;
+        public float width;
+        public float height;
+    }
+
+    record Person(int person_id, int age, string first_name, string last_name, string full_name);
+    record User(int user_id, string password, Person person);
+
+
+    string echo = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Echo("Calling Rust functions\n");
+        await Task.Delay(500);
+
+        greeting(); // console output
+
+        var x = 7;
+        var y = 11;
+        var h = hypotenuse(x, y);
+
+        Echo("Execute a function passing native parameters:");
+        Echo(string.Format("From Rust Library: Hypotenuse({0}, {1}) = {2}\n", x, y, h));
+
+        Echo("COUNTER");
+        Echo(counter().ToString());
+        Echo(counter().ToString());
+        Echo(counter().ToString());
+
+        //TODO Does not pass this test
+        //Echo("\nSTRUCT SAMPLE");
+        //Console.WriteLine("Get parallelepiped object");
+        //try {
+        //    var parallelepiped = get_any_parallelepiped();
+        //    var volume = get_parallelepiped_volume(parallelepiped);
+        //    // show it
+        //    Echo(string.Format("Length : {0}", parallelepiped.length));
+        //    Echo(string.Format("Width  : {0}", parallelepiped.width));
+        //    Echo(string.Format("Height : {0}", parallelepiped.height));
+        //    Echo(string.Format("Volume : {0:N2}", volume));
+        //}
+        //catch (Exception exception) {
+        //    Console.WriteLine("Exception: " + exception.Message);
+        //    Echo("Exception: " + exception.Message);
+        //}
+        // STRINGS
+        // ---------------------------------------------------------
+        Echo("\nSTRINGS");
+        Echo("Basic");
+        print_string("Hello");
+
+        Echo("\nTry extended characters");
+        print_string("« Sin música, la vida sería un error »");
+
+        // ** ok: but moore complexity
+        // print_string("« Esto es un árbol »".Utf8Text());
+
+        // getting a string from lib
+        Echo("\nTry to get a string from library");
+
+        var p = string_test();
+        var text = Marshal.PtrToStringUTF8(p);
+
+        Echo(string.Format("Encode String : {0}", p));
+        Echo(string.Format("Decode String : {0}", text));
+
+        p = describe_person(18);
+        text = Marshal.PtrToStringUTF8(p);
+        Echo(string.Format("describe_person(18) : {0}", text));
+
+        // COMPOSED OBJECTS
+        // ---------------------------------------------------------
+        Echo("\nCOMPOSED OBJECTS");
+        
+        var jsPointer = get_user(79);
+        var js = jsPointer.TextFromPointer() ?? string.Empty;
+        var user = JsonSerializer.Deserialize<User>(js);
+
+        Echo(string.Format("JSON data obtained from the library:\n{0}\n",  js.PrettyJson()));
+        Echo(string.Format("User identifier : {0}", user?.user_id));
+        Echo(string.Format("User first name : {0}", user?.person.first_name));
+        Echo(string.Format("User last name  : {0}", user?.person.last_name));
+    }
+
+    void Echo(string? message = null)
+    {
+        if (message is null)
+            echo = string.Empty;
+        else {
+            echo += $"{message}\n";
+            StateHasChanged();
+        }
+    }
+}
