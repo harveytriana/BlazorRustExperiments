@@ -9,6 +9,9 @@ COMPILE for dll
 COMPILE for WebAssembly
 1. Change to crate-type = ["staticlib"] in Cargo.toml (see the comments)
 2. cargo build --target wasm32-unknown-emscripten --release
+
+
+https://doc.rust-lang.org/cargo/commands/cargo-build.html
 ----------------------------------------------------------
 */
 // basic test
@@ -48,15 +51,37 @@ pub struct Parallelepiped {
 }
 
 #[no_mangle]
-pub extern "C" fn get_any_parallelepiped() -> Parallelepiped {
+// Not use in Emscripten's wasm : (
+pub extern "C" fn get_parallelepiped() -> Parallelepiped {
+    // dummy
     Parallelepiped {
-        length: 1.2,
+        length: 1.7,
         width: 2.2,
         height: 1.9,
     }
 }
 
+// return a static struct in a pointer
+static mut _P: Parallelepiped = Parallelepiped {
+    length: 0.0,
+    width: 0.0,
+    height: 0.0,
+};
+
 #[no_mangle]
+// Good for Emscripten : )
+pub extern "C" fn get_parallelepiped_ptr() -> *mut Parallelepiped {
+    unsafe {
+        // dummy
+        _P.length = 1.7;
+        _P.width = 2.2;
+        _P.height = 1.9;
+        &mut _P
+    }
+}
+
+#[no_mangle]
+// Good for all : )
 pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
     let volume = p.length * p.width * p.height;
     return volume;

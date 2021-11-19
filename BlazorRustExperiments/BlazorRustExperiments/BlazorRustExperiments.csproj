@@ -18,7 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<NativeFileReference Include="..\..\rstlib\target\wasm32-unknown-emscripten\release\librust_library.a" />
+		<NativeFileReference Include="..\..\rstlib\target\wasm32-unknown-emscripten\release\librstlib.a" />
 	</ItemGroup>
 	
 </Project>

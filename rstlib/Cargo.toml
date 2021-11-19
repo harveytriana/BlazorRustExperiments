@@ -3,24 +3,20 @@ name = "rstlib"
 version = "0.1.0"
 authors = ["Harvey Triana <harveytriana@gmail.com>"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [lib]
-name="rust_library"
+name="rstlib"
 
-# WebAssembly
+# WebAssembly for Emscripten (.a)
 # -----------------------------------------------------------------
-# must be commented the line for dylib.
+# Require: staticlib.
 # compile: cargo build --target wasm32-unknown-emscripten --release
-# This creates a .a file in target\wasm32-unknown-emscripten\release
-crate-type = ["staticlib"]
+# crate-type = ["staticlib"]
 
-# Console
+# Console (.dll)
 # -----------------------------------------------------------------
-# must be commented the line for staticlib. 
-# compile: > cargo build --release
-# This creates a .dll file in target\release
-# crate-type = ["dylib"]
+# Require: dylib 
+# compile: cargo build --release
+crate-type = ["dylib"]
 
 # JSON https://bit.ly/3kBDMok
 
