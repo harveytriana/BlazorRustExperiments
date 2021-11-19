@@ -1,0 +1,52 @@
+﻿@page "/json-test"
+@using System.Runtime.InteropServices
+@using System.Text.Json
+
+<PageTitle>Calling Rust Functions</PageTitle>
+
+<h3>Calling Rust Experiments</h3>
+<hr />
+<p>Look at the console output in browser development tools</p>
+<pre>@echo</pre>
+
+@code {
+    const string RUSTLIB = "librstlib";
+
+    [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
+
+    [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
+
+    record Person(int person_id, int age, string first_name, string last_name, string full_name);
+    record User(int user_id, string password, Person person);
+
+    string echo = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Echo("Calling Rust functions\n");
+        await Task.Delay(500);
+
+        // COMPOSED OBJECTS
+        // ---------------------------------------------------------
+        Echo("\nCOMPOSED OBJECTS");
+
+        var jsPointer = get_user(79);
+        var js = jsPointer.TextFromPointer() ?? string.Empty;
+        var user = JsonSerializer.Deserialize<User>(js);
+
+        Echo(string.Format("JSON data obtained from the library:\n{0}\n", js.PrettyJson()));
+        Echo(string.Format("User identifier : {0}", user?.user_id));
+        Echo(string.Format("User first name : {0}", user?.person.first_name));
+        Echo(string.Format("User last name  : {0}", user?.person.last_name));
+    }
+
+    void Echo(string? message = null)
+    {
+        if (message is null)
+            echo = string.Empty;
+        else {
+            echo += $"{message}\n";
+            StateHasChanged();
+        }
+    }
+}

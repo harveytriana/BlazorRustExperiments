@@ -17,7 +17,7 @@ Console.WriteLine("\nReady");
 /// </summary>
 class RustTest
 {
-    const string RUSTLIB = @"..\..\..\..\rstlib\target\release\librstlib.dll";
+    const string RUSTLIB = @"..\..\..\..\rstlib\target\release\rstlib.dll";
 
     [DllImport(RUSTLIB)] static extern void greeting();
 

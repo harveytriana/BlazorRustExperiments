@@ -1,6 +1,5 @@
 ﻿@page "/"
 @using System.Runtime.InteropServices
-@using System.Text.Json
 
 <PageTitle>Calling Rust Functions</PageTitle>
 
@@ -25,11 +24,6 @@
     [DllImport(RUSTLIB)] static extern IntPtr string_test();
 
     [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
-
-    [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
-
-    record Person(int person_id, int age, string first_name, string last_name, string full_name);
-    record User(int user_id, string password, Person person);
 
     string echo = string.Empty;
 
@@ -70,27 +64,15 @@
         var p = string_test();
         var text = Marshal.PtrToStringUTF8(p);
         // OR
-        //cvar text = p.TextFromPointer();
+        // var text = p.TextFromPointer();
 
         Echo(string.Format("String pointer      : {0}", p));
         Echo(string.Format("String dereferenced : {0}", text));
 
         // another funtion that returns a string
-        p = describe_person(18);
-        Echo(string.Format("describe_person(18) : {0}", p.TextFromPointer()));
-
-        // COMPOSED OBJECTS
-        // ---------------------------------------------------------
-        Echo("\nCOMPOSED OBJECTS");
-
-        var jsPointer = get_user(79);
-        var js = jsPointer.TextFromPointer() ?? string.Empty;
-        var user = JsonSerializer.Deserialize<User>(js);
-
-        Echo(string.Format("JSON data obtained from the library:\n{0}\n", js.PrettyJson()));
-        Echo(string.Format("User identifier : {0}", user?.user_id));
-        Echo(string.Format("User first name : {0}", user?.person.first_name));
-        Echo(string.Format("User last name  : {0}", user?.person.last_name));
+        var age = 18;
+        var desc = describe_person(age); // this is a pointer
+        Echo(string.Format("describe_person(18) : {0}", desc.TextFromPointer()));
     }
 
     void Echo(string? message = null)
