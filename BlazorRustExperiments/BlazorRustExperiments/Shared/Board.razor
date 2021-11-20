@@ -20,7 +20,7 @@
 </div>
 
 @code {
-    const string DEFAULCOLOR = "#000", BLANK = "blank";
+    const string BLANK = "blank";
 
     [Parameter] public string DefaultColor { get; set; } = "#000";
 
@@ -33,7 +33,7 @@
         if (text is null)
             lines.Clear();
         else {
-            Add(text, DEFAULCOLOR);
+            Add(text, DefaultColor);
         }
     }
 
@@ -58,7 +58,7 @@
         }
         string style = string.Empty;
         // color
-        if (color != DEFAULCOLOR) {
+        if (color != DefaultColor) {
             style += $"color:{color};";
         }
         // padding

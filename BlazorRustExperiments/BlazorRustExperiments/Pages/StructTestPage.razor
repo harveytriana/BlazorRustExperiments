@@ -27,17 +27,16 @@
 
     void RunSamples()
     {
-        board.Add("Calling Rust functions\n");
-        board.Add("STRUCT SAMPLE","gold");
+        board.Add("STRUCT SAMPLE", "tomato");
         try {
             var pointer = get_parallelepiped_ptr();
             var parallelepiped = Marshal.PtrToStructure<Parallelepiped>(pointer);
             var volume = get_parallelepiped_volume(parallelepiped);
             // show it
-            board.Add(string.Format("Length : {0}", parallelepiped.length));
-            board.Add(string.Format("Width  : {0}", parallelepiped.width));
-            board.Add(string.Format("Height : {0}", parallelepiped.height));
-            board.Add(string.Format("Volume : {0:N2}", volume));
+            board.Add($"Length : {parallelepiped.length:N2}");
+            board.Add($"Width  : {parallelepiped.width:N2}");
+            board.Add($"Height : {parallelepiped.height}");
+            board.Add($"Volume : {volume:N2}");
         }
         catch (Exception exception) {// not fired
             board.Add("Exception: " + exception.Message);
