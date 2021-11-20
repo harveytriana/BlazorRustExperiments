@@ -61,7 +61,7 @@ pub extern "C" fn get_parallelepiped() -> Parallelepiped {
     }
 }
 
-// return a static struct in a pointer
+// return a static struct in a pointer. _P referencing has enclosing scope.
 static mut _P: Parallelepiped = Parallelepiped {
     length: 0.0,
     width: 0.0,

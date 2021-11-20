@@ -1,10 +1,17 @@
 ﻿<!--
   MESSAGES BOARD
-  Emulate a console output. Can include lines with color
+  Emulate :-moz-any console output. Can include lines with color
   Author: harveytriana@gmaill.com
 -->
+<style>
+    .board {
+        font-family: Courier New, Courier, monospace;
+        list-style: outside none;
+        margin-top: 15px;
+    }
+</style>
 <div class="card bg-light">
-    <ul style="font-family: Courier New, Courier, monospace;list-style:outside none;margin-top:15px;">
+    <ul class="board">
         @foreach (var i in lines) {
             if (i.Style == BLANK) {
                 <li style="height:10px"></li>
