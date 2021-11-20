@@ -7,7 +7,7 @@ using System.Text.Json;
 
 static class Extensions
 {
-    public static string? TextFromPointer(this IntPtr pointer)
+    public static string TextFromPointer(this IntPtr pointer)
     {
         return Marshal.PtrToStringUTF8(pointer);
     }

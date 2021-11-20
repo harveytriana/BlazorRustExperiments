@@ -6,8 +6,7 @@
 
 <h3>Struct Test</h3>
 <hr />
-<p>Look at the console output in browser development tools</p>
-<pre>@echo</pre>
+<Board @ref="board" />
 
 @code {
     const string RUSTLIB = "librstlib";
@@ -17,37 +16,31 @@
     [DllImport(RUSTLIB)] static extern IntPtr get_parallelepiped_ptr();
     [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 
-    string echo = string.Empty;
+    Board board;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnAfterRender(bool firstRender)
     {
-        Echo("Calling Rust functions\n");
-        await Task.Delay(500);
+        if (firstRender) {
+            RunSamples();
+        }
+    }
 
-        Echo("STRUCT SAMPLE");
+    void RunSamples()
+    {
+        board.Add("Calling Rust functions\n");
+        board.Add("STRUCT SAMPLE","gold");
         try {
             var pointer = get_parallelepiped_ptr();
             var parallelepiped = Marshal.PtrToStructure<Parallelepiped>(pointer);
             var volume = get_parallelepiped_volume(parallelepiped);
             // show it
-            Echo(string.Format("Length : {0}", parallelepiped.length));
-            Echo(string.Format("Width  : {0}", parallelepiped.width));
-            Echo(string.Format("Height : {0}", parallelepiped.height));
-            Echo(string.Format("Volume : {0:N2}", volume));
+            board.Add(string.Format("Length : {0}", parallelepiped.length));
+            board.Add(string.Format("Width  : {0}", parallelepiped.width));
+            board.Add(string.Format("Height : {0}", parallelepiped.height));
+            board.Add(string.Format("Volume : {0:N2}", volume));
         }
         catch (Exception exception) {// not fired
-            Console.WriteLine("Exception: " + exception.Message);
-            Echo("Exception: " + exception.Message);
-        }
-    }
-
-    void Echo(string? message = null)
-    {
-        if (message is null)
-            echo = string.Empty;
-        else {
-            echo += $"{message}\n";
-            StateHasChanged();
+            board.Add("Exception: " + exception.Message);
         }
     }
 }

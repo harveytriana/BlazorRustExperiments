@@ -2,12 +2,11 @@
 @using System.Runtime.InteropServices
 @using System.Text.Json
 
-<PageTitle>Calling Rust Functions</PageTitle>
+<PageTitle>Calling Rust Experiments</PageTitle>
 
-<h3>Calling Rust Experiments</h3>
+<h3>Interchange JSON data</h3>
 <hr />
-<p>Look at the console output in browser development tools</p>
-<pre>@echo</pre>
+<Board @ref="board" />
 
 @code {
     const string RUSTLIB = "librstlib";
@@ -19,34 +18,29 @@
     record Person(int person_id, int age, string first_name, string last_name, string full_name);
     record User(int user_id, string password, Person person);
 
-    string echo = string.Empty;
+    Board board;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnAfterRender(bool firstRender)
     {
-        Echo("Calling Rust functions\n");
-        await Task.Delay(500);
-
-        // COMPOSED OBJECTS
-        // ---------------------------------------------------------
-        Echo("\nCOMPOSED OBJECTS");
-
-        var jsPointer = get_user(79);
-        var js = jsPointer.TextFromPointer() ?? string.Empty;
-        var user = JsonSerializer.Deserialize<User>(js);
-
-        Echo(string.Format("JSON data obtained from the library:\n{0}\n", js.PrettyJson()));
-        Echo(string.Format("User identifier : {0}", user?.user_id));
-        Echo(string.Format("User first name : {0}", user?.person.first_name));
-        Echo(string.Format("User last name  : {0}", user?.person.last_name));
-    }
-
-    void Echo(string? message = null)
-    {
-        if (message is null)
-            echo = string.Empty;
-        else {
-            echo += $"{message}\n";
-            StateHasChanged();
+        if (firstRender) {
+            RunSamples();
         }
     }
+
+    void RunSamples()
+    {
+        board.Add("Calling Rust functions\n");
+
+        board.Add("\nCOMPOSED OBJECTS");
+
+        var jsPointer = get_user(79);
+        var js = jsPointer.TextFromPointer();
+        var user = JsonSerializer.Deserialize<User>(js);
+
+        board.Add(string.Format("JSON data obtained from the library:\n{0}\n", js.PrettyJson()));
+        board.Add(string.Format("User identifier : {0}", user.user_id));
+        board.Add(string.Format("User first name : {0}", user.person.first_name));
+        board.Add(string.Format("User last name  : {0}", user.person.last_name));
+    }
+
 }

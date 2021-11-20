@@ -1,0 +1,23 @@
+﻿@page "/"
+
+<h3>EchoTest</h3>
+<hr />
+<Board @ref="board" />
+
+@code {
+    Board board;
+    int _i;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender) {
+            board.Add("BOARD");
+            board.Add("First line\nSecond line");
+            board.Add("Line with Color", "red");
+            board.Add("    Line with padding");
+            board.Add("    Line with padding and color", "#12abf4");
+            board.Add("\nTITLE");
+            board.Add("Other content");
+        }
+    }
+}

@@ -1,0 +1,78 @@
+﻿<!--
+  MESSAGES BOARD
+  Emulate a console output. Can include lines with color
+  Author: harveytriana@gmaill.com
+-->
+<div class="card bg-light">
+    <ul style="font-family: Courier New, Courier, monospace;list-style:outside none;margin-top:15px;">
+        @foreach (var i in lines) {
+            if (i.Style == BLANK) {
+                <li style="height:10px"></li>
+            }
+            else if (i.Style == string.Empty) {
+                <li>@i.Text</li>
+            }
+            else {
+                <li style="@i.Style">@i.Text</li>
+            }
+        }
+    </ul>
+</div>
+
+@code {
+    const string DEFAULCOLOR = "#000", BLANK = "blank";
+
+    [Parameter] public string DefaultColor { get; set; } = "#000";
+
+    record Echo(string Text, string Style);
+
+    List<Echo> lines = new();
+
+    public void Add(string text = null)
+    {
+        if (text is null)
+            lines.Clear();
+        else {
+            Add(text, DEFAULCOLOR);
+        }
+    }
+
+    public void Add(string text, string color)
+    {
+        if (text.Contains("\n")) {
+            var lines = text.Split('\n');
+            for (var i = 0; i < lines.Length; i++) {
+                this.lines.Add(new Echo(lines[i].Trim(), GetStyle(lines[i], color)));
+            }
+        }
+        else {
+            lines.Add(new Echo(text.Trim(), GetStyle(text, color)));
+        }
+        StateHasChanged();
+    }
+
+    string GetStyle(string text, string color)
+    {
+        if (text == string.Empty) {
+            return BLANK;
+        }
+        string style = string.Empty;
+        // color
+        if (color != DEFAULCOLOR) {
+            style += $"color:{color};";
+        }
+        // padding
+        var n = text.Length - text.TrimStart().Length;
+        if (n > 0) {
+            style += $"padding-left:{n * 8}px;";
+        }
+        return style;
+    }
+
+    public void Show()
+    {
+        foreach (var item in lines) {
+            Console.WriteLine("■ {0} | {1}", item.Text, item.Style);
+        }
+    }
+}
