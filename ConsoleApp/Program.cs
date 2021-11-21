@@ -1,7 +1,8 @@
 ﻿
 Console.WriteLine("CALLING RUST EXPERIMENTS\n");
 
-// RustMiscellany.Run();
+RustMiscellany.Run();
 RustAndStruct.Run();
+RustAndJson.Run();
 
 Console.WriteLine("\nReady");

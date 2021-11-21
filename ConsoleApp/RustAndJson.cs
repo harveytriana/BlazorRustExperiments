@@ -1,33 +1,57 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace ConsoleApp
+class RustAndJson
 {
-    class RustAndJson
+    const string RUSTLIB = @"..\..\..\..\rstlib\target\release\rstlib.dll";
+
+    [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
+
+    class Person
     {
-        const string RUSTLIB = @"..\..\..\..\rstlib\target\release\rstlib.dll";
+        [JsonPropertyName("Wind")] 
+        public int Id { get; set; }
+        [JsonPropertyName("first_name")]
+        public string? FirstName { get; set; }
+        [JsonPropertyName("last_name")]
+        public string? LastName { get; set; }
+        [JsonPropertyName("age")]
+        public int Age { get; set; }
+    }
+    class User
+    {
+        [JsonPropertyName("user_id")]
+        public int Id { get; set; }
+        [JsonPropertyName("person")]
+        public Person? Person { get; set; }
+        [JsonPropertyName("password")]
+        public string? Password { get; set; }
+    }
+    // OR
+    //record Person(
+    //    int person_id,
+    //    int age,
+    //    string first_name,
+    //    string last_name);
+    //record User(
+    //    int user_id,
+    //    string password,
+    //    Person person);
 
-        [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
+    public static void Run()
+    {
+        Console.WriteLine("\nCOMPOSED OBJECTS\n");
 
-        record Person(int person_id, int age, string first_name, string last_name, string full_name);
-        record User(int user_id, string password, Person person);
+        var jsPointer = get_user(79);
+        var js = jsPointer.TextFromPointer() ?? string.Empty;
+        var user = JsonSerializer.Deserialize<User>(js);
 
-        public static void Run()
-        {
-            Console.WriteLine("CALLING RUST FUNCTIONS");
-
-            // COMPOSED OBJECTS
-            // ---------------------------------------------------------
-            Console.WriteLine("\nCOMPOSED OBJECTS");
-
-            var jsPointer = get_user(79);
-            var js = jsPointer.TextFromPointer() ?? string.Empty;
-            var user = JsonSerializer.Deserialize<User>(js);
-
-            Console.WriteLine("JSON data obtained from the library:\n{0}\n", js.PrettyJson());
-            Console.WriteLine("Deserialized:");
-            Console.WriteLine("User identifier : {0}", user?.user_id);
-            Console.WriteLine("User first name : {0}", user?.person.first_name);
-            Console.WriteLine("User last name  : {0}", user?.person.last_name);
-        }
+        Console.WriteLine("JSON data obtained from the library:\n{0}\n", js.PrettyJson());
+        Console.WriteLine("Deserialized:");
+        Console.WriteLine("User identifier : {0}", user?.Id);
+        Console.WriteLine("First name      : {0}", user?.Person?.FirstName);
+        Console.WriteLine("Last name       : {0}", user?.Person?.LastName);
+        Console.WriteLine("Age             : {0}", user?.Person?.Age);
     }
 }
+
