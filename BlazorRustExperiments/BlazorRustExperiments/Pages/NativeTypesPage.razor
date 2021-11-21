@@ -10,7 +10,7 @@
 @code {
     const string RUSTLIB = "librstlib";
 
-    [DllImport(RUSTLIB)] static extern void greeting();
+    [DllImport(RUSTLIB)] static extern void hello_world();
 
     [DllImport(RUSTLIB)] static extern float hypotenuse(float x, float y);
 
@@ -20,7 +20,7 @@
     // OR **
     // [DllImport(RUSTLIB)] static extern void print_string(byte[] utf8Text);
 
-    [DllImport(RUSTLIB)] static extern IntPtr string_test();
+    [DllImport(RUSTLIB)] static extern IntPtr get_some_string();
 
     [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
 
@@ -35,9 +35,9 @@
 
     void RunSamples()
     {
-        board.Add("Calling Rust functions\n");
+        board.Add("CALLING RUST FUNCTIONS\n", "red");
 
-        greeting(); // console output
+        hello_world(); // console output
 
         var x = 7;
         var y = 11;
@@ -66,7 +66,7 @@
         // getting a string from lib
         board.Add("\nGet a string from library");
 
-        var p = string_test();
+        var p = get_some_string();
         var text = Marshal.PtrToStringUTF8(p);
         // OR
         // var text = p.TextFromPointer();

@@ -17,8 +17,8 @@ https://doc.rust-lang.org/cargo/commands/cargo-build.html
 // basic test
 // -------------------------------------------------------
 #[no_mangle]
-pub fn greeting() {
-    println!("Hello World!");
+pub fn hello_world() {
+    println!("Hello World!"); // rust writes in console
 }
 
 // math function
@@ -61,7 +61,7 @@ pub extern "C" fn get_parallelepiped() -> Parallelepiped {
     }
 }
 
-// return a static struct in a pointer. _P referencing has enclosing scope.
+// return a static struct in a pointer
 static mut _P: Parallelepiped = Parallelepiped {
     length: 0.0,
     width: 0.0,
@@ -69,7 +69,6 @@ static mut _P: Parallelepiped = Parallelepiped {
 };
 
 #[no_mangle]
-// Good for Emscripten : )
 pub extern "C" fn get_parallelepiped_ptr() -> *mut Parallelepiped {
     unsafe {
         // dummy
@@ -81,7 +80,6 @@ pub extern "C" fn get_parallelepiped_ptr() -> *mut Parallelepiped {
 }
 
 #[no_mangle]
-// Good for all : )
 pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
     let volume = p.length * p.width * p.height;
     return volume;
@@ -102,8 +100,8 @@ pub fn print_string(text_pointer: *const c_char) {
 use std::ffi::CString;
 
 #[no_mangle]
-pub fn string_test() -> *mut c_char {
-    let s = CString::new("« Sin música, la vida sería un error »").expect("CString::new failed!");
+pub fn get_some_string() -> *mut c_char {
+    let s = CString::new("Solo sé que nada sé. Sócrates").expect("CString::new failed!");
     s.into_raw()
 }
 

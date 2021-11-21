@@ -31,11 +31,11 @@
 
     [Parameter] public string DefaultColor { get; set; } = "#000";
 
-    record Echo(string Text, string Style);
+    record struct Line(string Text, string Style);
 
-    List<Echo> lines = new();
+    List<Line> lines = new();
 
-    public void Add(string text = null)
+    public void Add(string text)
     {
         if (text is null)
             lines.Clear();
@@ -46,14 +46,16 @@
 
     public void Add(string text, string color)
     {
-        if (text.Contains("\n")) {
-            var lines = text.Split('\n');
-            for (var i = 0; i < lines.Length; i++) {
-                this.lines.Add(new Echo(lines[i].Trim(), GetStyle(lines[i], color)));
+        if (string.IsNullOrWhiteSpace(text)) {
+            this.lines.Add(new Line(string.Empty, BLANK));
+        }
+        else if (text.Contains("\n")) {
+            foreach (var i in text.Split('\n')) {
+                this.lines.Add(new Line(i.Trim(), GetStyle(i, color)));
             }
         }
         else {
-            lines.Add(new Echo(text.Trim(), GetStyle(text, color)));
+            lines.Add(new Line(text.Trim(), GetStyle(text, color)));
         }
         StateHasChanged();
     }
