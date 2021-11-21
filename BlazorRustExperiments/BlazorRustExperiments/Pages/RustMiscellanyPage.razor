@@ -35,48 +35,39 @@
 
     void RunSamples()
     {
-        board.Add("CALLING RUST FUNCTIONS\n", "red");
-
         hello_world(); // console output
 
-        var x = 7;
-        var y = 11;
-        var h = hypotenuse(x, y);
+        board.Add("\nCALLING MATH FUNCTION", "green");
+        float x = 9, y = 11, h = hypotenuse(x, y);
+        board.Add(string.Format("From Rust Library, Hypotenuse({0}, {1}) = {2}\n", x, y, h));
 
-        board.Add(string.Format("From Rust Library: Hypotenuse({0}, {1}) = {2}\n", x, y, h));
-
-        board.Add("COUNTER");
-        board.Add("An internal variable in Rust library is changing");
-        board.Add(counter().ToString());
-        board.Add(counter().ToString());
-        board.Add(counter().ToString());
+        board.Add("\nCOUNTER FROM CLOSURE", "green");
+        board.Add($"Counter: {counter()}");
 
         // STRINGS
         // ---------------------------------------------------------
-        board.Add("\nSTRINGS");
-        board.Add("Send a text to Rust library. See console output.");
+        board.Add("\nEXCHANGING STRINGS", "green");
+        board.Add("Send a string to Rust (with extended characters)");
+        board.Add("See the browser console output", "darkmagenta");
         print_string("■ Hello from Blazor");
-
-        board.Add("\nSupports extended characters");
-        print_string("« Sin música, la vida sería un error »");
 
         // ** ok: but moore complexity
         // print_string("« Esto es un árbol »".Utf8Text());
 
         // getting a string from lib
-        board.Add("\nGet a string from library");
+        board.Add("\nGETTING STRINGS", "green");
 
-        var p = get_some_string();
-        var text = Marshal.PtrToStringUTF8(p);
+        var ptr = get_some_string();
+        var text = Marshal.PtrToStringUTF8(ptr);
         // OR
         // var text = p.TextFromPointer();
 
-        board.Add(string.Format("String pointer      : {0}", p));
-        board.Add(string.Format("String dereferenced : {0}", text));
+        board.Add($"String pointer : {ptr}");
+        board.Add($"Dereferenced   : {text}");
 
-        // another funtion that returns a string
+        board.Add("\nString function:");
         var age = 18;
         var desc = describe_person(age); // this is a pointer
-        board.Add(string.Format("describe_person(18) : {0}", desc.TextFromPointer()));
+        board.Add(string.Format("describe_person(age: 18) : {0}", desc.TextFromPointer()));
     }
 }
