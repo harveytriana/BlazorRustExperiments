@@ -17,13 +17,11 @@
     [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 
     // CALLBACKS
-    public delegate int Fn(int number);
+    delegate int Fn(int number);
 
     [DllImport(RUSTLIB)] static extern int c_operation(int number, Fn fn);
     [DllImport(RUSTLIB)] static extern int cube(int number);
-
-    static int Square(int number) => number * number;
-    static int Cube(int number) => number * number * number;
+    [DllImport(RUSTLIB)] static extern int square(int number);
 
     Board board;
 
@@ -36,27 +34,19 @@
 
     void RunSamples()
     {
-        board.Add("STRUCT SAMPLE", "tomato");
-        try {
-            var pointer = get_parallelepiped_ptr();
-            var parallelepiped = Marshal.PtrToStructure<Parallelepiped>(pointer);
-            var volume = get_parallelepiped_volume(parallelepiped);
-            // show it
-            board.Add($"Length : {parallelepiped.length:N2}");
-            board.Add($"Width  : {parallelepiped.width:N2}");
-            board.Add($"Height : {parallelepiped.height}");
-            board.Add($"Volume : {volume:N2}");
-            // callbacks
-            board.Add("\nCALLBASCK", "tomato");
-            // passing a C# function as parameter of Rust function
-            board.Add($"c_operation(5, Square) : {c_operation(5, Square)}");
-            board.Add($"c_operation(3, Cube)   : {c_operation(3, Cube)}");
-            // passing a rust funcion as parameter of Rust function
-            board.Add($"c_operation(5, cube)   : {c_operation(5, cube)}");
-
-        }
-        catch (Exception exception) {// not fired
-            board.Add("Exception: " + exception.Message);
-        }
+        board.Add("STRUCT SAMPLE", "darkmagenta");
+        var pointer = get_parallelepiped_ptr();
+        var parallelepiped = Marshal.PtrToStructure<Parallelepiped>(pointer);
+        var volume = get_parallelepiped_volume(parallelepiped);
+        // show it
+        board.Add($"Length : {parallelepiped.length:N2}");
+        board.Add($"Width  : {parallelepiped.width:N2}");
+        board.Add($"Height : {parallelepiped.height}");
+        board.Add($"Volume : {volume:N2}");
+        // callbacks
+        board.Add("\nCALLBACKS", "darkmagenta");
+        board.Add("passing a C# function as parameter of Rust function");
+        board.Add($"c_operation(5, square) : {c_operation(5, square)}");
+        board.Add($"c_operation(7, cube)   : {c_operation(7, cube)}");
     }
 }

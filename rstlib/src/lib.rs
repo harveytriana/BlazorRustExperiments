@@ -174,25 +174,32 @@ pub fn get_user(user_id: i32) -> *mut c_char {
     encode.into_raw()
 }
 
-// CALLBACK
+// CALLBACK ---------------------------------------------------------------------------------
 fn operation(number: i32, f: &dyn Fn(i32) -> i32) -> i32 {
     f(number)
 }
-// fn square(number: i32) -> i32 {
-//     number * number
-// }
+
+#[no_mangle]
+pub extern "C" fn c_operation(number: i32, callback_fn: unsafe extern "C" fn(i32) -> i32) -> i32 {
+    operation(number, &|n| unsafe { callback_fn(n) })
+}
+
+// samples... operation(2, cube) = 8
 #[no_mangle]
 fn cube(number: i32) -> i32 {
     number * number * number
 }
+#[no_mangle]
+fn square(number: i32) -> i32 {
+    number * number
+}
 
-// fn callback_as_arg_test() {
-//     println!("{}", operation(5, &square));
-//     println!("{}", operation(7, &square));
-//     println!("{}", operation(3, &cube));
+// FLOATS
+// fn f_x(number: f32, f_callback: &dyn Fn(f32) -> f32) -> f32 {
+//     f_callback(number)
 // }
 
-#[no_mangle]
-pub extern "C" fn c_operation(number: i32, f: unsafe extern "C" fn(i32) -> i32) -> i32 {
-    operation(number, &|n| unsafe { f(n) })
-}
+// #[no_mangle]
+// pub extern "C" fn f_operation(number: f32, f_callback: unsafe extern "C" fn(f32) -> f32) -> f32 {
+//     f_x(number, &|n| unsafe { f_callback(n) })
+// }
