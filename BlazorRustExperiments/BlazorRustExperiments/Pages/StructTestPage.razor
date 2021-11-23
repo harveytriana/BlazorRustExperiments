@@ -16,6 +16,15 @@
     [DllImport(RUSTLIB)] static extern IntPtr get_parallelepiped_ptr();
     [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 
+    // CALLBACKS
+    public delegate int Fn(int number);
+
+    [DllImport(RUSTLIB)] static extern int c_operation(int number, Fn fn);
+    [DllImport(RUSTLIB)] static extern int cube(int number);
+
+    static int Square(int number) => number * number;
+    static int Cube(int number) => number * number * number;
+
     Board board;
 
     protected override void OnAfterRender(bool firstRender)
@@ -37,6 +46,14 @@
             board.Add($"Width  : {parallelepiped.width:N2}");
             board.Add($"Height : {parallelepiped.height}");
             board.Add($"Volume : {volume:N2}");
+            // callbacks
+            board.Add("\nCALLBASCK", "tomato");
+            // passing a C# function as parameter of Rust function
+            board.Add($"c_operation(5, Square) : {c_operation(5, Square)}");
+            board.Add($"c_operation(3, Cube)   : {c_operation(3, Cube)}");
+            // passing a rust funcion as parameter of Rust function
+            board.Add($"c_operation(5, cube)   : {c_operation(5, cube)}");
+
         }
         catch (Exception exception) {// not fired
             board.Add("Exception: " + exception.Message);
