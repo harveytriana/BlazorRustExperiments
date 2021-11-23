@@ -62,7 +62,6 @@ class RustMiscellany
         ptr = describe_person(age);
          
         Console.WriteLine("describe_person(age: {0}) : {1}",age, ptr.TextFromPointer());
-
     }
 }
 

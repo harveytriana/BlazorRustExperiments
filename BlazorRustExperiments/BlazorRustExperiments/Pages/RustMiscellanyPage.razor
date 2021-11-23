@@ -24,38 +24,42 @@
 
     [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
 
-    Board board;
+    Board board, board2, board3;
 
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender) {
-            RunSamples();
+            Miscellany();
         }
     }
 
-    void RunSamples()
+    void Miscellany()
     {
         hello_world(); // console output
 
-        board.Add("\nCALLING MATH FUNCTION", "green");
+        board.Add("\nCALLING MATH FUNCTION");
         float x = 9, y = 11, h = hypotenuse(x, y);
         board.Add(string.Format("From Rust Library, Hypotenuse({0}, {1}) = {2}\n", x, y, h));
 
-        board.Add("\nCOUNTER FROM CLOSURE", "green");
+        board.Add("\nCOUNTER FROM CLOSURE");
+        board.Add($"Counter: {counter()}");
+        board.Add($"Counter: {counter()}");
+        board.Add($"Counter: {counter()}");
+        board.Add($"Counter: {counter()}");
         board.Add($"Counter: {counter()}");
 
         // STRINGS
         // ---------------------------------------------------------
-        board.Add("\nEXCHANGING STRINGS", "green");
+        board.Add("\nEXCHANGING STRINGS");
         board.Add("Send a string to Rust (with extended characters)");
-        board.Add("See the browser console output", "darkmagenta");
+        board.Add("See the browser console output", "salmon");
         print_string("■ Hello from Blazor");
 
         // ** ok: but moore complexity
         // print_string("« Esto es un árbol »".Utf8Text());
 
         // getting a string from lib
-        board.Add("\nGETTING STRINGS", "green");
+        board.Add("\nGETTING STRINGS");
 
         var ptr = get_some_string();
         var text = Marshal.PtrToStringUTF8(ptr);
@@ -70,4 +74,6 @@
         var desc = describe_person(age); // this is a pointer
         board.Add(string.Format("describe_person(age: 18) : {0}", desc.TextFromPointer()));
     }
+
+
 }

@@ -173,3 +173,26 @@ pub fn get_user(user_id: i32) -> *mut c_char {
     let encode = CString::new(json).expect("CString::new failed!");
     encode.into_raw()
 }
+
+// CALLBACK
+fn operation(number: i32, f: &dyn Fn(i32) -> i32) -> i32 {
+    f(number)
+}
+fn square(number: i32) -> i32 {
+    number * number
+}
+fn cube(number: i32) -> i32 {
+    number * number * number
+}
+
+fn callback_as_arg_test() {
+    // passing a function as parameter, OK :)
+    println!("{}", operation(5, &square));
+    println!("{}", operation(7, &square));
+    println!("{}", operation(3, &cube));
+}
+
+#[no_mangle]
+pub extern "C" fn c_operation(number: i32, f: unsafe extern "C" fn(i32) -> i32) -> i32 {
+    operation(number, &|n| unsafe { f(n) })
+}
