@@ -178,7 +178,7 @@ pub fn get_user(user_id: i32) -> *mut c_char {
 fn operation(number: i32, f: &dyn Fn(i32) -> i32) -> i32 {
     f(number)
 }
-
+// signature for C#
 #[no_mangle]
 pub extern "C" fn c_operation(number: i32, callback_fn: unsafe extern "C" fn(i32) -> i32) -> i32 {
     operation(number, &|n| unsafe { callback_fn(n) })
@@ -195,11 +195,11 @@ fn square(number: i32) -> i32 {
     number * number
 }
 
-//  EVENTS ------------------------------------------
+//  EVENTS -----------------------------------------------------------
 use std::thread::sleep;
 use std::time::Duration;
 
-// event (delegate in C#)
+// event (~> delegate in C#)
 pub type PromptHandler = Option<unsafe extern "C" fn(_: i32) -> ()>;
 
 #[no_mangle]

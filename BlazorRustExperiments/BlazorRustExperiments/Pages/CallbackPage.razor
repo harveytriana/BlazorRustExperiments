@@ -11,7 +11,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Echo("Try C++ Callback.");
+        await Echo("Rust Callback.");
         await Task.Delay(1000);
 
         CallbackExperiment.Echo += Echo;
