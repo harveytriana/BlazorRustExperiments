@@ -1,0 +1,38 @@
+﻿@page "/callback-sample"
+@implements IDisposable
+
+<h1>Native Dependencies - Callbacks</h1>
+<hr />
+<p>Look at the console output in browser development tools</p>
+<pre>@echo</pre>
+
+@code {
+    string echo = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Echo("Try C++ Callback.");
+        await Task.Delay(1000);
+
+        CallbackExperiment.Echo += Echo;
+        CallbackExperiment.Run();
+    }
+
+    async Task Echo(string message = null)
+    {
+        Console.WriteLine("Echo: {0}", message);
+
+        if (message is null)
+            echo = string.Empty;
+        else {
+            echo += $"{message}\n";
+            // FIXME: Does not update UI immediately
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public void Dispose()
+    {
+        CallbackExperiment.Echo -= Echo;
+    }
+}

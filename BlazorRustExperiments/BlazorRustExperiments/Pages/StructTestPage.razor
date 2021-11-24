@@ -51,13 +51,5 @@
         board.Add("passing a C# function as parameter of Rust function");
         board.Add($"c_operation(5, square) : {c_operation(5, square)}");
         board.Add($"c_operation(7, cube)   : {c_operation(7, cube)}");
-        // events
-        board.Add("\nEVENTS", "darkmagenta");
-        // kill the app: OnRiseNumber(DoSomenthingWithNumber);
-    }
-
-    void OnRaiseNumber(int number)
-    {
-        board.Add($"arrives extern number: {number}");
     }
 }
