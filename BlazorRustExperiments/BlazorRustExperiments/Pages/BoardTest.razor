@@ -8,6 +8,15 @@
     Board board;
     int _i;
 
+    string echo = "", echo2="", echo3="";
+
+    protected override void OnInitialized()
+    {
+        echo = "This a text\nSecond line\n    tabbed";
+        echo2 = "Echo 2";
+        echo3 = "Echo 3";
+    }
+
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender) {
@@ -15,8 +24,9 @@
             board.Add("First line\nSecond line");
             board.Add("Line with Color", "red");
             board.Add("    Line with padding");
-            board.Add("    Line with padding and color", "#12abf4");
-            board.Add("\nTITLE");
+            board.Add("    Line with padding and {    } color", "#12abf4");
+            board.Add("End.\n");
+            board.Add("**TITLE");
             board.Add("Other content");
         }
     }

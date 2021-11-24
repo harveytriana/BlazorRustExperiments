@@ -35,29 +35,31 @@
     {
         hello_world(); // console output
 
-        board.Add("\nCALLING MATH FUNCTION");
+        board.Add("**CALLING MATH FUNCTION");
         float x = 9, y = 11, h = hypotenuse(x, y);
         board.Add(string.Format("From Rust Library, Hypotenuse({0}, {1}) = {2}\n", x, y, h));
 
-        board.Add("\nCOUNTER FROM CLOSURE");
+        board.Add("**COUNTER FROM CLOSURE");
         board.Add($"Counter: {counter()}");
         board.Add($"Counter: {counter()}");
         board.Add($"Counter: {counter()}");
         board.Add($"Counter: {counter()}");
-        board.Add($"Counter: {counter()}");
+        board.Add($"Counter: {counter()}\n");
 
         // STRINGS
         // ---------------------------------------------------------
-        board.Add("\nEXCHANGING STRINGS");
+        board.Add("**SENDING STRINGS");
         board.Add("Send a string to Rust (with extended characters)");
-        board.Add("See the browser console output", "salmon");
+        
         print_string("■ Hello from Blazor");
+
+        board.Add("See the browser console output\n", "salmon");
 
         // ** ok: but moore complexity
         // print_string("« Esto es un árbol »".Utf8Text());
 
         // getting a string from lib
-        board.Add("\nGETTING STRINGS");
+        board.Add("**GETTING STRINGS");
 
         var ptr = get_some_string();
         var text = Marshal.PtrToStringUTF8(ptr);
@@ -65,9 +67,9 @@
         // var text = p.TextFromPointer();
 
         board.Add($"String pointer : {ptr}");
-        board.Add($"Dereferenced   : {text}");
+        board.Add($"Dereferenced   : {text}\n");
 
-        board.Add("\nString function:");
+        board.Add("**STRING FUNCTION");
         var age = 18;
         var desc = describe_person(age); // this is a pointer
         board.Add(string.Format("describe_person(age: 18) : {0}", desc.TextFromPointer()));

@@ -5,84 +5,72 @@
 -->
 <style>
     .board {
-        font-family: Courier New, Courier, monospace;
-        list-style: outside none;
         margin-top: 15px;
+        margin-bottom: 15px;
         color: #000
     }
 </style>
 <div class="card bg-light">
-    <ul class="board">
-        @foreach (var i in lines) {
-            if (i.Style == BLANK) {
-                <li style="height:10px"></li>
-            }
-            else if (i.Style == string.Empty) {
-                <li>@i.Text</li>
-            }
-            else {
-                <li style="@i.Style">@i.Text</li>
-            }
+    <div class="board">
+        @foreach (var i in _lines) {
+            <pre style="@i.Style">@i.Text</pre>
         }
-    </ul>
+    </div>
 </div>
 
 @code {
-    const string BLANK = "blank";
-
     [Parameter] public string DefaultColor { get; set; } = "#000";
 
     record struct Line(string Text, string Style);
 
-    List<Line> lines = new();
+    List<Line> _lines = new();
 
-    public void Add(string text)
+    readonly string _baseStyle = "margin-top:2px;margin-bottom:2px;margin-left:20px;margin-right:20px;";
+
+    public void Add(string text = null)
     {
-        if (text is null)
-            lines.Clear();
-        else {
-            Add(text, DefaultColor);
-        }
+        Add(text, DefaultColor);
     }
 
     public void Add(string text, string color)
     {
-        if (string.IsNullOrWhiteSpace(text)) {
-            this.lines.Add(new Line(string.Empty, BLANK));
-        }
-        else if (text.Contains("\n")) {
+        if (text.Contains("\n")) {
             foreach (var i in text.Split('\n')) {
-                this.lines.Add(new Line(i.Trim(), GetStyle(i, color)));
+                AddWithStyle(i, color);
             }
         }
         else {
-            lines.Add(new Line(text.Trim(), GetStyle(text, color)));
+            AddWithStyle(text, color);
         }
         StateHasChanged();
     }
 
-    string GetStyle(string text, string color)
+    public void Clear()
     {
-        if (text == string.Empty) {
-            return BLANK;
-        }
-        string style = string.Empty;
-        // color
-        if (color != DefaultColor) {
-            style += $"color:{color};";
-        }
-        // padding
-        var n = text.Length - text.TrimStart().Length;
-        if (n > 0) {
-            style += $"padding-left:{n * 8}px;";
-        }
-        return style;
+        _lines.Clear();
     }
 
-    public void Show()
+    void AddWithStyle(string text, string color)
     {
-        foreach (var item in lines) {
-            Console.WriteLine("■ {0} | {1}", item.Text, item.Style);
+        var tr = text;
+        var st = GetStyle(ref tr, color);
+        _lines.Add(new Line(tr, st));
+    }
+
+    string GetStyle(ref string text, string color)
+    {
+        if (string.IsNullOrEmpty(text)) {
+            return "height:0px;";
         }
+
+        var s = _baseStyle;
+        if (color != DefaultColor) {
+            s += $"color:{color};";
+        }
+        if (text.StartsWith("**")) {// bold
+            text = text[2..];
+            s += "font-weight:700;";
+        }
+        return s;
     }
 }
