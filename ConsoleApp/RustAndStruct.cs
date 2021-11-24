@@ -1,10 +1,11 @@
-﻿
+﻿namespace ConsoleApp;
+
 class RustAndStruct
 {
     // C# 10
     record struct Parallelepiped(float length, float width, float height);
     /*
-     ** before C# 10
+    Before C# 10
     [StructLayout(LayoutKind.Sequential)]
     struct Parallelepiped
     {
@@ -13,13 +14,12 @@ class RustAndStruct
         public float height {get ;set; };
     }
     */
-    const string RUSTLIB = @"..\..\..\..\rstlib\target\release\rstlib.dll";
 
-    [DllImport(RUSTLIB)] static extern Parallelepiped get_parallelepiped();
+    [DllImport(App.RLIB)] static extern Parallelepiped get_parallelepiped();
 
-    [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
+    [DllImport(App.RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
     
-    [DllImport(RUSTLIB)] static extern IntPtr get_parallelepiped_ptr();
+    [DllImport(App.RLIB)] static extern IntPtr get_parallelepiped_ptr();
 
     public static void Run()
     {
@@ -28,6 +28,7 @@ class RustAndStruct
         // call rust functions
         var parallelepiped = get_parallelepiped();
         var volume = get_parallelepiped_volume(parallelepiped);
+
         // show it
         Console.WriteLine("Length : {0}", parallelepiped.length);
         Console.WriteLine("Width  : {0}", parallelepiped.width);

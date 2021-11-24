@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
+namespace ConsoleApp;
+
 class RustAndJson
 {
     const string RUSTLIB = @"..\..\..\..\rstlib\target\release\rstlib.dll";

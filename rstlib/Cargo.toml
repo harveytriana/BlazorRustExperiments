@@ -11,15 +11,17 @@ name="rstlib"
 # -----------------------------------------------------------------
 # Require: staticlib.
 # compile: cargo build --target wasm32-unknown-emscripten --release
-crate-type = ["staticlib"]
+# crate-type = ["staticlib"]
 
 # Console (.dll)
 # -----------------------------------------------------------------
 # Require: dylib 
 # compile: cargo build --release
-# crate-type = ["dylib"]
+crate-type = ["dylib"]
 
 # JSON https://bit.ly/3kBDMok
+# libc https://rust-lang.github.io/libc/
+# libc = "0.2"
 
 [dependencies]
 serde = { version = "1.0.126", features = ["derive"] }

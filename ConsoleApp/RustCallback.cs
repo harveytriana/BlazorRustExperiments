@@ -1,12 +1,12 @@
-﻿class RustCallback
-{
-    const string RSTLIB = @"..\..\..\..\rstlib\target\release\rstlib.dll";
+﻿namespace ConsoleApp;
 
+class RustCallback
+{
     public delegate int Fn(int number);
 
-    [DllImport(RSTLIB)] static extern int c_operation(int number, Fn fn);
-    [DllImport(RSTLIB)] static extern int cube(int number);
-    [DllImport(RSTLIB)] static extern int square(int number);
+    [DllImport(App.RLIB)] static extern int c_operation(int number, Fn fn);
+    [DllImport(App.RLIB)] static extern int cube(int number);
+    [DllImport(App.RLIB)] static extern int square(int number);
 
     static int Square(int number) => number * number;
     static int Cube(int number) => number * number * number;

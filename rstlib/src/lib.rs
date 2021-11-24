@@ -184,22 +184,32 @@ pub extern "C" fn c_operation(number: i32, callback_fn: unsafe extern "C" fn(i32
     operation(number, &|n| unsafe { callback_fn(n) })
 }
 
-// samples... operation(2, cube) = 8
+// sample... operation(2, cube) = 8
 #[no_mangle]
 fn cube(number: i32) -> i32 {
     number * number * number
 }
+// sample... operation(2, square) = 8
 #[no_mangle]
 fn square(number: i32) -> i32 {
     number * number
 }
 
-// FLOATS
-// fn f_x(number: f32, f_callback: &dyn Fn(f32) -> f32) -> f32 {
-//     f_callback(number)
-// }
+//  EVENTS ------------------------------------------
+use std::thread::sleep;
+use std::time::Duration;
 
-// #[no_mangle]
-// pub extern "C" fn f_operation(number: f32, f_callback: unsafe extern "C" fn(f32) -> f32) -> f32 {
-//     f_x(number, &|n| unsafe { f_callback(n) })
-// }
+// event (delegate in C#)
+pub type PromptHandler = Option<unsafe extern "C" fn(_: i32) -> ()>;
+
+#[no_mangle]
+pub unsafe extern "C" fn UnmanagedPrompt(notify: PromptHandler) {
+    let mut i = 0;
+    while i <= 10 {
+        notify.expect("non-null function pointer")(i);
+        // simulate
+        sleep(Duration::from_millis(250));
+        // return
+        i += 1
+    }
+}

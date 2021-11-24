@@ -1,23 +1,23 @@
-﻿/// <summary>
+﻿namespace ConsoleApp;
+
+/// <summary>
 /// How to call a Rust's code function from C# 
 /// </summary>
 class RustMiscellany
 {
-    const string RUSTLIB = @"..\..\..\..\rstlib\target\release\rstlib.dll";
+    [DllImport(App.RLIB)] static extern void hello_world();
 
-    [DllImport(RUSTLIB)] static extern void hello_world();
+    [DllImport(App.RLIB)] static extern float hypotenuse(float x, float y);
 
-    [DllImport(RUSTLIB)] static extern float hypotenuse(float x, float y);
+    [DllImport(App.RLIB)] static extern int counter();
 
-    [DllImport(RUSTLIB)] static extern int counter();
-
-    [DllImport(RUSTLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    [DllImport(App.RLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
     // OR **
-    // [DllImport(RUSTLIB)] static extern void print_string(byte[] utf8Text);
+    // [DllImport(App.RLIB)] static extern void print_string(byte[] utf8Text);
 
-    [DllImport(RUSTLIB)] static extern IntPtr get_some_string();
+    [DllImport(App.RLIB)] static extern IntPtr get_some_string();
 
-    [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
+    [DllImport(App.RLIB)] static extern IntPtr describe_person(int age);
 
     public static void Run()
     {
