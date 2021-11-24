@@ -9,19 +9,22 @@
 <Board @ref="board" />
 
 @code {
-    const string RUSTLIB = "librstlib";
-
     record struct Parallelepiped(float length, float width, float height);
 
-    [DllImport(RUSTLIB)] static extern IntPtr get_parallelepiped_ptr();
-    [DllImport(RUSTLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
+    [DllImport(Global.RLIB)] static extern IntPtr get_parallelepiped_ptr();
+    [DllImport(Global.RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 
     // CALLBACKS
     delegate int Fn(int number);
 
-    [DllImport(RUSTLIB)] static extern int c_operation(int number, Fn fn);
-    [DllImport(RUSTLIB)] static extern int cube(int number);
-    [DllImport(RUSTLIB)] static extern int square(int number);
+    [DllImport(Global.RLIB)] static extern int c_operation(int number, Fn fn);
+    [DllImport(Global.RLIB)] static extern int cube(int number);
+    [DllImport(Global.RLIB)] static extern int square(int number);
+
+    // EVENTS
+    public delegate void RaiseNumber(int number);
+
+    [DllImport(Global.RLIB)] static extern void UnmanagedPrompt(RaiseNumber cppCallback);
 
     Board board;
 
@@ -48,5 +51,13 @@
         board.Add("passing a C# function as parameter of Rust function");
         board.Add($"c_operation(5, square) : {c_operation(5, square)}");
         board.Add($"c_operation(7, cube)   : {c_operation(7, cube)}");
+        // events
+        board.Add("\nEVENTS", "darkmagenta");
+        // kill the app: OnRiseNumber(DoSomenthingWithNumber);
+    }
+
+    void OnRaiseNumber(int number)
+    {
+        board.Add($"arrives extern number: {number}");
     }
 }

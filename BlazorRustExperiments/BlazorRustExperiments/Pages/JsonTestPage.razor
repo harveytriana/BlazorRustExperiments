@@ -9,11 +9,9 @@
 <Board @ref="board" />
 
 @code {
-    const string RUSTLIB = "librstlib";
+    [DllImport(Global.RLIB)] static extern IntPtr describe_person(int age);
 
-    [DllImport(RUSTLIB)] static extern IntPtr describe_person(int age);
-
-    [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
+    [DllImport(Global.RLIB)] static extern IntPtr get_user(int user_id);
 
     record Person(int person_id, int age, string first_name, string last_name, string full_name);
     record User(int user_id, string password, Person person);
