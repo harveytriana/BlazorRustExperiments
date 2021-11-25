@@ -2,9 +2,9 @@
 @using System.Runtime.InteropServices
 @implements IDisposable
 
+<PageTitle>Calling Rust</PageTitle>
 <h3>Running Rust process with callback</h3>
 <hr />
-<p>Look at the console output in browser development tools</p>
 <Board @ref="board" Card=false />
 
 @code {
@@ -33,6 +33,7 @@
         board.Add(string.Format("c_operation({0}, cube)    : {1}", x, c_operation(x, cube)));
         board.Add("");
         board.Add("**EVENTS");
+        board.Add("Look activity at the browser console output", "coral");
         board.Add("Processing...", "red");
         
         // display content
@@ -49,7 +50,7 @@
 
         CallbackExperiment.Run();
 
-        board.Add("\nReady", "cadetblue");
+        board.Add("\nREADY.", "coral");
     }
 
     async Task Notify(string message)

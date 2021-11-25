@@ -101,7 +101,7 @@ use std::ffi::CString;
 
 #[no_mangle]
 pub fn get_some_string() -> *mut c_char {
-    let s = CString::new("Solo sé que nada sé. Sócrates").expect("CString::new failed!");
+    let s = CString::new("« Solo sé que nada sé » Sócrates").expect("CString::new failed!");
     s.into_raw()
 }
 

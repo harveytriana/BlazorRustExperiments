@@ -1,10 +1,8 @@
 ﻿@page "/miscellany"
 @using System.Runtime.InteropServices
 
-<PageTitle>Calling Rust Functions</PageTitle>
-
-<h3>Calling Rust Experiments</h3>
-<hr />
+<PageTitle>Calling Rust</PageTitle>
+<h3>Calling Rust Miscellany</h3>
 <Board @ref="board" />
 
 @code {
@@ -40,11 +38,11 @@
     {
         hello_world(); // console output
 
-        board.Add("**CALLING MATH FUNCTION");
+        board.Add("**CALLING A MATH FUNCTION");
         float x = 9, y = 11, h = hypotenuse(x, y);
         board.Add(string.Format("From Rust Library, Hypotenuse({0}, {1}) = {2}\n", x, y, h));
 
-        board.Add("**COUNTER FROM CLOSURE");
+        board.Add("**COUNTER FROM EMULATED CLOSURE");
         board.Add($"Counter: {counter()}");
         board.Add($"Counter: {counter()}");
         board.Add($"Counter: {counter()}");
@@ -93,7 +91,7 @@
         board.Add($"Length            : {parallelepiped.length:N2}");
         board.Add($"Width             : {parallelepiped.width:N2}");
         board.Add($"Height            : {parallelepiped.height:N2}\n");
-        board.Add("Call a rust function get_parallelepiped_volume(...)", "brown");
+        board.Add("Call a rust function passing a C# struct as parameter");
         board.Add($"Volume            : {volume:N2}");
     }
 
