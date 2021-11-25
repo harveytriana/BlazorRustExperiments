@@ -67,11 +67,12 @@ a, .btn-link {
 /* CUSTOM */
 .title {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 40px;
+    font-size: 48px;
     color: darkgray;
+    font-weight:600;
 }
 .subtitle {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 17px;
-    color: gray;
+    color: #888;
 }
