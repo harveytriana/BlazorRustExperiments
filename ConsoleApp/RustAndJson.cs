@@ -5,13 +5,12 @@ namespace ConsoleApp;
 
 class RustAndJson
 {
-    const string RUSTLIB = @"..\..\..\..\rstlib\target\release\rstlib.dll";
-
-    [DllImport(RUSTLIB)] static extern IntPtr get_user(int user_id);
+    [DllImport(App.RLIB)] static extern IntPtr get_user(int user_id);
+    [DllImport(App.RLIB)] static extern void post_user([MarshalAs(UnmanagedType.LPUTF8Str)] string userJson);
 
     class Person
     {
-        [JsonPropertyName("Wind")] 
+        [JsonPropertyName("person_id")]
         public int Id { get; set; }
         [JsonPropertyName("first_name")]
         public string? FirstName { get; set; }
@@ -40,7 +39,7 @@ class RustAndJson
     //    string password,
     //    Person person);
 
-    public static void Run()
+    public static void RunSample()
     {
         Console.WriteLine("\nCOMPOSED OBJECTS\n");
 
@@ -54,6 +53,31 @@ class RustAndJson
         Console.WriteLine("First name      : {0}", user?.Person?.FirstName);
         Console.WriteLine("Last name       : {0}", user?.Person?.LastName);
         Console.WriteLine("Age             : {0}", user?.Person?.Age);
+
+        // sending json
+        var alisson = new User {
+            Id = 789456123,
+            Password = "hashed password",
+            Person = new Person {
+                Id = 123,
+                FirstName = "Alisson Johana",
+                LastName = "Triana",
+                Age = 18,
+            }
+        };
+
+        js = JsonSerializer.Serialize(alisson);
+
+        Console.WriteLine("\nJSON data send to the library:\n{0}\n", js.PrettyJson());
+
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        try {
+            post_user(js);
+        }
+        catch { }
+        Console.ForegroundColor = ConsoleColor.Gray;
+
+
     }
 }
 

@@ -126,9 +126,8 @@ pub extern "C" fn describe_person(age: &i16) -> &str {
 }
 */
 
-// Objects
+// OBJECTS
 // ------------------------------------------------------
-// class
 extern crate serde;
 extern crate serde_json;
 
@@ -159,6 +158,7 @@ pub struct User {
 // return -> User lock by not FFI-safe. Then we return JSON
 // Then it is solved by returning JSON, and thus all the complexity is eliminated
 pub fn get_user(user_id: i32) -> *mut c_char {
+    // dummy entity
     let user = User {
         user_id: user_id, // simulate
         password: "hashed password".to_string(),
@@ -170,8 +170,22 @@ pub fn get_user(user_id: i32) -> *mut c_char {
         },
     };
     let json = serde_json::to_string(&user).unwrap();
+    // to C#
     let encode = CString::new(json).expect("CString::new failed!");
     encode.into_raw()
+}
+
+#[no_mangle]
+pub fn post_user(json_pointer: *const c_char) {
+    let c_str = unsafe { CStr::from_ptr(json_pointer) };
+    let r_str = c_str.to_str().unwrap();
+    let json = r_str.to_string();
+
+    //deserialize and print
+    let user: User = serde_json::from_str(&json).unwrap();
+
+    println!("User is a Rust's Structure:");
+    println!("{:?}", user);
 }
 
 // CALLBACK ---------------------------------------------------------------------------------
