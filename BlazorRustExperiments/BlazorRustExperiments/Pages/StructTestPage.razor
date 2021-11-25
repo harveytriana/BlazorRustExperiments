@@ -36,15 +36,20 @@
 
     void RunSamples()
     {
-        board.Add("STRUCT SAMPLE", "darkmagenta");
-        var pointer = get_parallelepiped_ptr();
-        var parallelepiped = Marshal.PtrToStructure<Parallelepiped>(pointer);
+        board.Add("**SAMPLE");
+
+        var structPointer = get_parallelepiped_ptr();
+        var parallelepiped = Marshal.PtrToStructure<Parallelepiped>(structPointer);
         var volume = get_parallelepiped_volume(parallelepiped);
+
         // show it
-        board.Add($"Length : {parallelepiped.length:N2}");
-        board.Add($"Width  : {parallelepiped.width:N2}");
-        board.Add($"Height : {parallelepiped.height}");
-        board.Add($"Volume : {volume:N2}");
+        board.Add($"Get pointer       : {structPointer}");
+        board.Add($"Marshal to Struct : {parallelepiped}");
+        board.Add($"Length            : {parallelepiped.length:N2}");
+        board.Add($"Width             : {parallelepiped.width:N2}");
+        board.Add($"Height            : {parallelepiped.height:N2}\n");
+        board.Add("Call a rest function get_parallelepiped_volume(...)", "brown");
+        board.Add($"Volume            : {volume:N2}");
         // callbacks
         board.Add("\nCALLBACKS", "darkmagenta");
         board.Add("passing a C# function as parameter of Rust function");

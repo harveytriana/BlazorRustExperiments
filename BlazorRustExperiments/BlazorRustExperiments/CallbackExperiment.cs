@@ -14,7 +14,7 @@ public unsafe class CallbackExperiment
     {
         Console.WriteLine("\nRunning C++");
 
-        // call a C++ method
+        // call rust method
         UnmanagedPrompt((IntPtr)OnRaiseNumberPointer);
     }
 

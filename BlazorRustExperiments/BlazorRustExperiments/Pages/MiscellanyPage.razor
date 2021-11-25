@@ -50,10 +50,12 @@
         // ---------------------------------------------------------
         board.Add("**SENDING STRINGS");
         board.Add("Send a string to Rust (with extended characters)");
-        
-        print_string("■ Hello from Blazor");
 
-        board.Add("See the browser console output\n", "salmon");
+        var s = "« Quien descubre el quién soy descubrirá el quién eres » Neruda";
+
+        board.Add($"print_string('{s}')", "brown");
+        print_string(s);
+        board.Add("See the browser console output\n", "coral");
 
         // ** ok: but moore complexity
         // print_string("« Esto es un árbol »".Utf8Text());
