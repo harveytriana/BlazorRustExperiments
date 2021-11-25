@@ -20,19 +20,21 @@ class RustEvents
     }
 
     // extern ----------------------------------------------------------------------
-    [DllImport(App.RLIB)] static extern void UnmanagedPrompt(RaiseNumber cppCallback);
+    [DllImport(Global.RLIB)] static extern void UnmanagedPrompt(RaiseNumber cppCallback);
 }
 
 unsafe class RustEventsWasm
 {
-    readonly delegate* unmanaged<int, void> OnRaiseNumberPointer = &OnRaiseNumber;
+    readonly delegate *unmanaged<int, void> OnRaiseNumberPointer = &OnRaiseNumber;
 
     public void Run()
     {
         Console.WriteLine("\nRunning Sample Rust");
 
         // call rust method
-        UnmanagedPrompt((IntPtr)OnRaiseNumberPointer);
+        // UnmanagedPrompt((IntPtr)OnRaiseNumberPointer);
+        // **
+        UnmanagedPrompt(OnRaiseNumberPointer);
     }
 
     [UnmanagedCallersOnly]
@@ -42,7 +44,7 @@ unsafe class RustEventsWasm
     }
 
     // extern ---------------------------------------------------------------
-    [DllImport(App.RLIB)] static extern void UnmanagedPrompt(IntPtr notify);
-    // theory
-    // [DllImport(CLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> cppCallback);
+    // [DllImport(App.RLIB)] static extern void UnmanagedPrompt(IntPtr notify);
+    // **
+    [DllImport(Global.RLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> notify);
 }

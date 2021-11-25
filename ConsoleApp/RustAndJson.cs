@@ -5,8 +5,8 @@ namespace ConsoleApp;
 
 class RustAndJson
 {
-    [DllImport(App.RLIB)] static extern IntPtr get_user(int user_id);
-    [DllImport(App.RLIB)] static extern void post_user([MarshalAs(UnmanagedType.LPUTF8Str)] string userJson);
+    [DllImport(Global.RLIB)] static extern IntPtr get_user(int user_id);
+    [DllImport(Global.RLIB)] static extern void post_user([MarshalAs(UnmanagedType.LPUTF8Str)] string userJson);
 
     class Person
     {

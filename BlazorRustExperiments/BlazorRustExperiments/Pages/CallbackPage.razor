@@ -8,11 +8,11 @@
 <Board @ref="board" Card=false />
 
 @code {
-    delegate int Fn(int number);
+    public delegate float Fn(float x);
 
-    [DllImport(Global.RLIB)] static extern int c_operation(int number, Fn fn);
-    [DllImport(Global.RLIB)] static extern int cube(int number);
-    [DllImport(Global.RLIB)] static extern int square(int number);
+    [DllImport(Global.RLIB)] static extern float c_operation(float x, Fn fn);
+    [DllImport(Global.RLIB)] static extern float cube(float x);
+    [DllImport(Global.RLIB)] static extern float square(float x);
 
     Board board;
 
@@ -25,11 +25,13 @@
 
     async Task RunSamples()
     {
-        board.Add("**CALLBACKS");
-        board.Add("passing a Rust function as parameter of Rust function...", "brown");
-        board.Add($"c_operation(5, square) : {c_operation(5, square)}");
-        board.Add($"c_operation(7, cube)   : {c_operation(7, cube)}\n");
+        float x = 7.0F;
 
+        board.Add("**CALLBACKS");
+        board.Add("Passing a rust funcion as parameter of a Rust function");
+        board.Add(string.Format("c_operation({0}, square)  : {1}", x, c_operation(x, square)));
+        board.Add(string.Format("c_operation({0}, cube)    : {1}", x, c_operation(x, cube)));
+        board.Add("");
         board.Add("**EVENTS");
         board.Add("Processing...", "red");
         
@@ -40,7 +42,7 @@
         CallbackExperiment.Echo += Notify;
         CallbackExperiment.Run();
 
-        board.Add("\nOnce again...", "red");
+        board.Add("Once again...", "red");
 
         await InvokeAsync(StateHasChanged);
         await Task.Delay(600);

@@ -15,11 +15,11 @@ class RustAndStruct
     }
     */
 
-    [DllImport(App.RLIB)] static extern Parallelepiped get_parallelepiped();
+    [DllImport(Global.RLIB)] static extern Parallelepiped get_parallelepiped();
 
-    [DllImport(App.RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
+    [DllImport(Global.RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
     
-    [DllImport(App.RLIB)] static extern IntPtr get_parallelepiped_ptr();
+    [DllImport(Global.RLIB)] static extern IntPtr get_parallelepiped_ptr();
 
     public static void Run()
     {

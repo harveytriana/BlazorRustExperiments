@@ -16,6 +16,8 @@ public unsafe class CallbackExperiment
 
         // call rust method
         UnmanagedPrompt((IntPtr)OnRaiseNumberPointer);
+        // ** theory
+        // UnmanagedPrompt(OnRaiseNumberPointer);
     }
 
     [UnmanagedCallersOnly]
@@ -26,6 +28,6 @@ public unsafe class CallbackExperiment
 
     // extern ---------------------------------------------------------------
     [DllImport(Global.RLIB)] static extern void UnmanagedPrompt(IntPtr notify);
-    // theory
-    // [DllImport(CLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> cppCallback);
+    // ** theory
+    // [DllImport(Global.RLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> notify);
 }

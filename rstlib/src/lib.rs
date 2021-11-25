@@ -189,24 +189,24 @@ pub fn post_user(json_pointer: *const c_char) {
 }
 
 // CALLBACK ---------------------------------------------------------------------------------
-fn operation(number: i32, f: &dyn Fn(i32) -> i32) -> i32 {
-    f(number)
+fn operation(x: f32, f: &dyn Fn(f32) -> f32) -> f32 {
+    f(x)
 }
 // signature for C#
 #[no_mangle]
-pub extern "C" fn c_operation(number: i32, callback_fn: unsafe extern "C" fn(i32) -> i32) -> i32 {
-    operation(number, &|n| unsafe { callback_fn(n) })
+pub extern "C" fn c_operation(x: f32, callback_fn: unsafe extern "C" fn(f32) -> f32) -> f32 {
+    operation(x, &|n| unsafe { callback_fn(n) })
 }
 
 // sample... operation(2, cube) = 8
 #[no_mangle]
-fn cube(number: i32) -> i32 {
-    number * number * number
+fn cube(x: f32) -> f32 {
+    x * x * x
 }
 // sample... operation(2, square) = 8
 #[no_mangle]
-fn square(number: i32) -> i32 {
-    number * number
+fn square(x: f32) -> f32 {
+    x * x
 }
 
 //  EVENTS -----------------------------------------------------------

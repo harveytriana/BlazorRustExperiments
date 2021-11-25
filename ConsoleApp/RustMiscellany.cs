@@ -5,19 +5,19 @@
 /// </summary>
 class RustMiscellany
 {
-    [DllImport(App.RLIB)] static extern void hello_world();
+    [DllImport(Global.RLIB)] static extern void hello_world();
 
-    [DllImport(App.RLIB)] static extern float hypotenuse(float x, float y);
+    [DllImport(Global.RLIB)] static extern float hypotenuse(float x, float y);
 
-    [DllImport(App.RLIB)] static extern int counter();
+    [DllImport(Global.RLIB)] static extern int counter();
 
-    [DllImport(App.RLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    [DllImport(Global.RLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
     // OR **
     // [DllImport(App.RLIB)] static extern void print_string(byte[] utf8Text);
 
-    [DllImport(App.RLIB)] static extern IntPtr get_some_string();
+    [DllImport(Global.RLIB)] static extern IntPtr get_some_string();
 
-    [DllImport(App.RLIB)] static extern IntPtr describe_person(int age);
+    [DllImport(Global.RLIB)] static extern IntPtr describe_person(int age);
 
     public static void Run()
     {
