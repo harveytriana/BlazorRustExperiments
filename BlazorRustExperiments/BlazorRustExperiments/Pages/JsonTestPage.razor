@@ -1,6 +1,7 @@
 ﻿@page "/json-test"
 @using System.Runtime.InteropServices
 @using System.Text.Json
+@using System.Text.Json.Serialization
 
 <PageTitle>Calling Rust Experiments</PageTitle>
 
@@ -9,12 +10,40 @@
 <Board @ref="board" />
 
 @code {
-    [DllImport(Global.RLIB)] static extern IntPtr describe_person(int age);
-
     [DllImport(Global.RLIB)] static extern IntPtr get_user(int user_id);
+    [DllImport(Global.RLIB)] static extern IntPtr describe_person(int age);
+    [DllImport(Global.RLIB)] static extern void post_user([MarshalAs(UnmanagedType.LPUTF8Str)] string userJson);
 
-    record Person(int person_id, int age, string first_name, string last_name, string full_name);
-    record User(int user_id, string password, Person person);
+    class Person
+    {
+        [JsonPropertyName("person_id")]
+        public int Id { get; set; }
+        [JsonPropertyName("first_name")]
+        public string? FirstName { get; set; }
+        [JsonPropertyName("last_name")]
+        public string? LastName { get; set; }
+        [JsonPropertyName("age")]
+        public int Age { get; set; }
+    }
+    class User
+    {
+        [JsonPropertyName("user_id")]
+        public int Id { get; set; }
+        [JsonPropertyName("person")]
+        public Person? Person { get; set; }
+        [JsonPropertyName("password")]
+        public string? Password { get; set; }
+    }
+    // OR
+    //record Person(
+    //    int person_id,
+    //    int age,
+    //    string first_name,
+    //    string last_name);
+    //record User(
+    //    int user_id,
+    //    string password,
+    //    Person person);
 
     Board board;
 
@@ -27,18 +56,41 @@
 
     void RunSamples()
     {
-        board.Add("Calling Rust functions\n");
-
-        board.Add("\nCOMPOSED OBJECTS");
+        // READING -----------------------------------------------------------------------------
+        board.Add("**READING JSON");
 
         var jsPointer = get_user(79);
         var js = jsPointer.TextFromPointer();
         var user = JsonSerializer.Deserialize<User>(js);
 
         board.Add(string.Format("JSON data obtained from the library:\n{0}\n", js.PrettyJson()));
-        board.Add(string.Format("User identifier : {0}", user.user_id));
-        board.Add(string.Format("User first name : {0}", user.person.first_name));
-        board.Add(string.Format("User last name  : {0}", user.person.last_name));
+        board.Add(string.Format("Identifier : {0}", user.Id));
+        board.Add(string.Format("First name : {0}", user.Person.FirstName));
+        board.Add(string.Format("Last name  : {0}", user.Person.LastName));
+        board.Add(string.Format("Age        : {0}", user.Person.Age));
+
+        // SENDING -----------------------------------------------------------------------------
+        board.Add("\n**SENDING JSON");
+
+        var alisson = new User {
+            Id = 789456123,
+            Password = "hashed password",
+            Person = new Person {
+                Id = 123,
+                FirstName = "Alisson Johana",
+                LastName = "Triana",
+                Age = 18,
+            }
+        };
+
+        var alissonJson = JsonSerializer.Serialize(alisson);
+
+        board.Add(string.Format("JSON data will send to the library:\n{0}\n", alissonJson.PrettyJson()));
+        board.Add("\nSee the console output for results.", "coral");
+        try {
+            post_user(alissonJson);
+        }
+        catch { }
     }
 
 }
