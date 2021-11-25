@@ -20,11 +20,6 @@
     [DllImport(Global.RLIB)] static extern int cube(int number);
     [DllImport(Global.RLIB)] static extern int square(int number);
 
-    // EVENTS
-    public delegate void RaiseNumber(int number);
-
-    [DllImport(Global.RLIB)] static extern void UnmanagedPrompt(RaiseNumber cppCallback);
-
     Board board;
 
     protected override void OnAfterRender(bool firstRender)

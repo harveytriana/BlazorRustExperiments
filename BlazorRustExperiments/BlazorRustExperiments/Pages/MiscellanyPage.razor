@@ -14,13 +14,18 @@
 
     [DllImport(Global.RLIB)] static extern int counter();
 
+    // STRINGS
     [DllImport(Global.RLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
     // OR **
     // [DllImport(Global.RLIB)] static extern void print_string(byte[] utf8Text);
-
     [DllImport(Global.RLIB)] static extern IntPtr get_some_string();
-
     [DllImport(Global.RLIB)] static extern IntPtr describe_person(int age);
+
+    // STRUCTURES
+    record struct Parallelepiped(float length, float width, float height);
+
+    [DllImport(Global.RLIB)] static extern IntPtr get_parallelepiped_ptr();
+    [DllImport(Global.RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 
     Board board;
 
@@ -74,7 +79,22 @@
         board.Add("**STRING FUNCTION");
         var age = 18;
         var desc = describe_person(age); // this is a pointer
-        board.Add(string.Format("describe_person(age: 18) : {0}", desc.TextFromPointer()));
+        board.Add(string.Format("describe_person(age: 18) : {0}\n", desc.TextFromPointer()));
+
+        board.Add("**STRUCTURES");
+
+        var structPointer = get_parallelepiped_ptr();
+        var parallelepiped = Marshal.PtrToStructure<Parallelepiped>(structPointer);
+        var volume = get_parallelepiped_volume(parallelepiped);
+
+        // show it
+        board.Add($"Get pointer       : {structPointer}");
+        board.Add($"Marshal to Struct : {parallelepiped}");
+        board.Add($"Length            : {parallelepiped.length:N2}");
+        board.Add($"Width             : {parallelepiped.width:N2}");
+        board.Add($"Height            : {parallelepiped.height:N2}\n");
+        board.Add("Call a rust function get_parallelepiped_volume(...)", "brown");
+        board.Add($"Volume            : {volume:N2}");
     }
 
 
