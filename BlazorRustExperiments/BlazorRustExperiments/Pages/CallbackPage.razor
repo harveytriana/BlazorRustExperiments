@@ -1,38 +1,48 @@
 ﻿@page "/callback-sample"
 @implements IDisposable
 
-<h1>Native Dependencies - Callbacks</h1>
+<h3>Running Rust process with callback</h3>
 <hr />
 <p>Look at the console output in browser development tools</p>
-<pre>@echo</pre>
+<Board @ref="board" />
 
 @code {
-    string echo = string.Empty;
+    Board board;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await Echo("Rust Callback.");
-        await Task.Delay(1000);
-
-        CallbackExperiment.Echo += Echo;
-        CallbackExperiment.Run();
+        if (firstRender) {
+            board.Add("Processing...", "red");
+            await Task.Delay(600);
+            await Run();
+        }
     }
 
-    async Task Echo(string message = null)
+    async Task Run()
+    {
+        CallbackExperiment.Echo += Prompt;
+        CallbackExperiment.Run();
+
+        board.Add("\nOnce again...", "red");
+
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(600);
+
+        CallbackExperiment.Run();
+
+        board.Add("\nReady", "cadetblue");
+    }
+
+    async Task Prompt(string message)
     {
         Console.WriteLine("Echo: {0}", message);
+        board.Add(message);
 
-        if (message is null)
-            echo = string.Empty;
-        else {
-            echo += $"{message}\n";
-            // FIXME: Does not update UI immediately
-            await InvokeAsync(StateHasChanged);
-        }
+        await Task.Delay(0);
     }
 
     public void Dispose()
     {
-        CallbackExperiment.Echo -= Echo;
+        CallbackExperiment.Echo -= Prompt;
     }
 }

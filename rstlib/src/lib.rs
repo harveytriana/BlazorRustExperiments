@@ -204,7 +204,7 @@ pub type PromptHandler = Option<unsafe extern "C" fn(_: i32) -> ()>;
 
 #[no_mangle]
 pub unsafe extern "C" fn UnmanagedPrompt(notify: PromptHandler) {
-    let mut i = 0;
+    let mut i = 1;
     while i <= 10 {
         notify.expect("non-null function pointer")(i);
         // simulate

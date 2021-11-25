@@ -5,7 +5,7 @@ namespace BlazorRustExperiments;
 public unsafe class CallbackExperiment
 {
     // echo to consumer
-    public delegate Task EchoHandler(string? message);
+    public delegate Task EchoHandler(string message);
     public static EchoHandler Echo;
 
     static readonly delegate* unmanaged<int, void> OnRaiseNumberPointer = &OnRaiseNumber;
