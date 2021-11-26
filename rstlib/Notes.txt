@@ -10,3 +10,8 @@ pub extern "C" fn hello(name: *const i8) {
     let n = s.to_str().unwrap();
     println!("Hello '{}'!", n);
 }
+
+
+
+# libc https://rust-lang.github.io/libc/
+# libc = "0.2"

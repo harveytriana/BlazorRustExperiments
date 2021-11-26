@@ -7,9 +7,7 @@
 
 @code {
     [DllImport(Global.RLIB)] static extern void hello_world();
-
     [DllImport(Global.RLIB)] static extern float hypotenuse(float x, float y);
-
     [DllImport(Global.RLIB)] static extern int counter();
 
     // STRINGS
@@ -21,7 +19,6 @@
 
     // STRUCTURES
     record struct Parallelepiped(float length, float width, float height);
-
     [DllImport(Global.RLIB)] static extern IntPtr get_parallelepiped_ptr();
     [DllImport(Global.RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 

@@ -39,7 +39,7 @@ class RustAndJson
     //    string password,
     //    Person person);
 
-    public static void RunSample()
+    public static void Run()
     {
         Console.WriteLine("\nCOMPOSED OBJECTS\n");
 
