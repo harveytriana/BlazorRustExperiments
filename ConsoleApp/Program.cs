@@ -10,4 +10,7 @@ RustAndJson.Run();
 //
 new RustEvents().Run();
 
-unsafe { new RustEventsWasm().Run(); }
+unsafe { 
+    new RustEventsWasm().Run();
+    new RustCallbackWasm().Run();
+}

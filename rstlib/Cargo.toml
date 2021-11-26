@@ -11,13 +11,13 @@ name="rstlib"
 # -----------------------------------------------------------------
 # Require: staticlib.
 # compile: cargo build --target wasm32-unknown-emscripten --release
-# crate-type = ["staticlib"]
+crate-type = ["staticlib"]
 
 # Console (.dll)
 # -----------------------------------------------------------------
 # Require: dylib 
 # compile: cargo build --release
-crate-type = ["dylib"]
+# crate-type = ["dylib"]
 
 # JSON https://bit.ly/3kBDMok
 
