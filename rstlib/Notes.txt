@@ -11,7 +11,9 @@ pub extern "C" fn hello(name: *const i8) {
     println!("Hello '{}'!", n);
 }
 
+libc https://rust-lang.github.io/libc/
+dependence:
+libc = "0.2"
 
-
-# libc https://rust-lang.github.io/libc/
-# libc = "0.2"
+Guide
+JSON https://bit.ly/3kBDMok

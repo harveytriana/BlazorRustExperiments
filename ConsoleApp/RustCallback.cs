@@ -22,12 +22,16 @@ class RustCallback
         Console.WriteLine("------------------------------------------------------");
         Console.WriteLine("c_operation({0}, square)  : {1}", x, c_operation(x, square));
         Console.WriteLine("c_operation({0}, cube)    : {1}", x, c_operation(x, cube));
-        WriteLineColor(  $"c_operation({x}, cube)    : {c_operation(x, cube)}", ConsoleColor.DarkCyan);
+        //
+        WriteLineColor($"execute_fn_f32({x}, cube)    : {execute_fn_f32(cube, x)}", ConsoleColor.DarkCyan);
+        WriteLineColor($"execute_fn_f32({x}, cube)    : {execute_fn_f32(Cube, x)}", ConsoleColor.DarkCyan);
     }
 
     [DllImport(RLIB)] static extern float c_operation(float x, Fn fn);
     [DllImport(RLIB)] static extern float cube(float x);
     [DllImport(RLIB)] static extern float square(float x);
+    //
+    [DllImport(RLIB)] static extern float execute_fn_f32(Fn handle, float x);
 }
 
 // Advanced
