@@ -31,26 +31,30 @@
         board.Add("Passing a rust funcion as parameter of a Rust function");
         board.Add(string.Format("c_operation({0}, square)  : {1}", x, c_operation(x, square)));
         board.Add(string.Format("c_operation({0}, cube)    : {1}", x, c_operation(x, cube)));
+        //
+        ExecuteFunctions.Echo += Notify;
+        ExecuteFunctions.Run();
+
         board.Add("");
         board.Add("**EVENTS");
         board.Add("Look activity at the browser console output", "coral");
         board.Add("Processing...", "red");
-        
+
         // display content
         await Task.Delay(600);
 
         // Experimental
-        CallbackExperiment.Echo += Notify;
-        CallbackExperiment.Run();
+        CallbackEvent.Echo += Notify;
+        CallbackEvent.RunEvents();
 
         board.Add("Once again...", "red");
 
         await InvokeAsync(StateHasChanged);
         await Task.Delay(600);
 
-        CallbackExperiment.Run();
+        CallbackEvent.RunEvents();
 
-        board.Add("\nREADY.", "coral");
+        board.Add("END");
     }
 
     async Task Notify(string message)
@@ -63,6 +67,7 @@
 
     public void Dispose()
     {
-        CallbackExperiment.Echo -= Notify;
+        ExecuteFunctions.Echo -= Notify;
+        CallbackEvent.Echo -= Notify;
     }
 }
