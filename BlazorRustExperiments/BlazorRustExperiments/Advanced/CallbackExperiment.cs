@@ -19,7 +19,7 @@ public unsafe class CallbackEvent
 
     public static void RunEvents()
     {
-        Console.WriteLine("\nRunning C++");
+        Console.WriteLine("\nRunning Rust...");
 
         // call rust method
         UnmanagedPrompt((IntPtr)OnRaiseNumberPointer);
