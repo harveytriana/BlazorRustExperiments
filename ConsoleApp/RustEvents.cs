@@ -1,6 +1,8 @@
 ﻿// 
 namespace ConsoleApp;
 
+using static Global;
+
 class RustEvents
 {
     // event
@@ -8,8 +10,7 @@ class RustEvents
 
     public void Run()
     {
-        Console.WriteLine("\nRunning Sample Rust");
-
+        WriteLineColor("\nEVENTS", ConsoleColor.Cyan);
         // call a rust method
         UnmanagedPrompt(OnRaiseNumber);
     }
@@ -20,7 +21,7 @@ class RustEvents
     }
 
     // extern ----------------------------------------------------------------------
-    [DllImport(Global.RLIB)] static extern void UnmanagedPrompt(RaiseNumber cppCallback);
+    [DllImport(RLIB)] static extern void UnmanagedPrompt(RaiseNumber fn);
 }
 
 unsafe class RustEventsWasm
@@ -29,11 +30,8 @@ unsafe class RustEventsWasm
 
     public void Run()
     {
-        Console.WriteLine("\nRunning Sample Rust");
-
+        WriteLineColor("\nEVENTS", ConsoleColor.Cyan);
         // call rust method
-        // UnmanagedPrompt((IntPtr)OnRaiseNumberPointer);
-        // **
         UnmanagedPrompt(OnRaiseNumberPointer);
     }
 
@@ -46,5 +44,31 @@ unsafe class RustEventsWasm
     // extern ---------------------------------------------------------------
     // [DllImport(App.RLIB)] static extern void UnmanagedPrompt(IntPtr notify);
     // **
-    [DllImport(Global.RLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> notify);
+    [DllImport(RLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> notify);
+}
+
+class RustEvents2
+{
+    delegate void Notify(int number);
+    delegate int Fn(int x);
+
+    public void Run()
+    {
+        WriteLineColor("\nEVENTS", ConsoleColor.Cyan);
+        // call a rust method
+        get_serie(OnNotify, Cube, 1, 10);
+    }
+
+    int Cube(int x)
+    {
+        return x * x * x;
+    }
+
+    private void OnNotify(int number)
+    {
+        Console.WriteLine($"arrives extern number: {number}");
+    }
+
+    // extern ----------------------------------------------------------------------
+    [DllImport(RLIB)] static extern void get_serie(Notify notify, Fn fn, int x1, int x2);
 }

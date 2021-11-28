@@ -4,7 +4,7 @@ using static Global;
 
 class RustCallback
 {
-    public delegate float Fn(float x);
+    delegate float Fn(float x);
 
     static float Square(float x) => x * x;
     static float Cube(float x) => x * x * x;
@@ -30,7 +30,7 @@ class RustCallback
 }
 
 /// <summary>
-/// For wasm, Emscripten works with pointer in callbacks
+/// For wasm, Emscripten works with pointers in callbacks
 /// </summary>
 unsafe class RustCallbackWasm
 {
