@@ -1,7 +1,6 @@
 ﻿/*
  * Optional strategy for manage strings
  */
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 
@@ -22,7 +21,6 @@ static class Extensions
         var options = new JsonSerializerOptions() {
             WriteIndented = true
         };
-
         var jsonElement = JsonSerializer.Deserialize<JsonElement>(plainJson);
 
         return JsonSerializer.Serialize(jsonElement, options);

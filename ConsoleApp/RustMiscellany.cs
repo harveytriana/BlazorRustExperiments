@@ -1,23 +1,20 @@
 ﻿namespace ConsoleApp;
 
+using static Global;
+
 /// <summary>
 /// How to call a Rust's code function from C# 
 /// </summary>
 class RustMiscellany
 {
-    [DllImport(Global.RLIB)] static extern void hello_world();
-
-    [DllImport(Global.RLIB)] static extern float hypotenuse(float x, float y);
-
-    [DllImport(Global.RLIB)] static extern int counter();
-
-    [DllImport(Global.RLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    [DllImport(RLIB)] static extern void hello_world();
+    [DllImport(RLIB)] static extern float hypotenuse(float x, float y);
+    [DllImport(RLIB)] static extern int counter();
+    [DllImport(RLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
     // OR **
     // [DllImport(App.RLIB)] static extern void print_string(byte[] utf8Text);
-
-    [DllImport(Global.RLIB)] static extern IntPtr get_some_string();
-
-    [DllImport(Global.RLIB)] static extern IntPtr describe_person(int age);
+    [DllImport(RLIB)] static extern IntPtr get_some_string();
+    [DllImport(RLIB)] static extern IntPtr describe_person(int age);
 
     public static void Run()
     {

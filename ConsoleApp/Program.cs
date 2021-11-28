@@ -1,12 +1,12 @@
 ﻿using ConsoleApp;
 
 Console.WriteLine("CALLING RUST EXPERIMENTS\n");
-/*
+
 RustMiscellany.Run();
-RustAndStruct.Run();
-RustAndJson.Run();
+RustStruct.Run();
+RustJson.Run();
 RustCallback.Run();
-RustAndJson.Run();
+RustJson.Run();
 //
 new RustEvents().Run();
 
@@ -14,5 +14,5 @@ unsafe {
     new RustEventsWasm().Run();
     new RustCallbackWasm().Run();
 }
-*/
-new RustEvents2().Run();
+
+// new RustEvents2().Run();

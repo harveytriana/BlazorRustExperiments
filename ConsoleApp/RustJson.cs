@@ -2,11 +2,12 @@
 using System.Text.Json.Serialization;
 
 namespace ConsoleApp;
+using static Global;
 
-class RustAndJson
+class RustJson
 {
-    [DllImport(Global.RLIB)] static extern IntPtr get_user(int user_id);
-    [DllImport(Global.RLIB)] static extern void post_user([MarshalAs(UnmanagedType.LPUTF8Str)] string userJson);
+    [DllImport(RLIB)] static extern IntPtr get_user(int user_id);
+    [DllImport(RLIB)] static extern void post_user([MarshalAs(UnmanagedType.LPWStr)] string userJson);
 
     class Person
     {

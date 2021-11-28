@@ -1,6 +1,8 @@
 ﻿namespace ConsoleApp;
 
-class RustAndStruct
+using static Global;
+
+class RustStruct
 {
     // C# 10
     record struct Parallelepiped(float length, float width, float height);
@@ -15,11 +17,9 @@ class RustAndStruct
     }
     */
 
-    [DllImport(Global.RLIB)] static extern Parallelepiped get_parallelepiped();
-
-    [DllImport(Global.RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
-    
-    [DllImport(Global.RLIB)] static extern IntPtr get_parallelepiped_ptr();
+    [DllImport(RLIB)] static extern Parallelepiped get_parallelepiped();
+    [DllImport(RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
+    [DllImport(RLIB)] static extern IntPtr get_parallelepiped_ptr();
 
     public static void Run()
     {

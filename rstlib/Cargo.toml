@@ -2,20 +2,17 @@
 name = "rstlib"
 version = "0.1.0"
 authors = ["Harvey Triana <harveytriana@gmail.com>"]
-license = "MIT OR Apache-2.0"
 
 [lib]
 name="rstlib"
 
 # WebAssembly for Emscripten (.a)
 # -----------------------------------------------------------------
-# Require: staticlib.
 # compile: cargo build --target wasm32-unknown-emscripten --release
 # crate-type = ["staticlib"]
 
-# Console (.dll)
+# Dynamic library for C# Console (.dll)
 # -----------------------------------------------------------------
-# Require: dylib 
 # compile: cargo build --release
 crate-type = ["dylib"]
 
