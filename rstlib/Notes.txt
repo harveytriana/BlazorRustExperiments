@@ -17,3 +17,37 @@ libc = "0.2"
 
 Guide
 JSON https://bit.ly/3kBDMok
+
+About Passing a C# 1 Rust fn as parameter. Other approach:
+// CALLBACK ---------------------------------------------------------------------------------
+fn operation(x: f32, f: &dyn Fn(f32) -> f32) -> f32 {
+    f(x)
+}
+// signature for C#
+#[no_mangle]
+pub extern "C" fn c_operation(
+    // parameter
+    x: f32,
+    // callback funtion (delagate)
+    callback_fn: unsafe extern "C" fn(f32) -> f32,
+) -> f32 {
+    operation(x, &|n| unsafe { callback_fn(n) })
+}
+
+Then, in C#
+ public delegate float Fn(float x);
+
+static float Square(float x) => x * x;
+
+float x = 7.0F;
+
+WriteLineColor("\nCALLBACKS", ConsoleColor.DarkCyan);
+Console.WriteLine("Passing a C# function as parameter of a Rust function");
+Console.WriteLine("------------------------------------------------------");
+Console.WriteLine("c_operation({0}, Cube)    : {1}", x, c_operation(x, Cube));
+Console.WriteLine();
+Console.WriteLine("Passing a rust funcion as parameter of a Rust function");
+Console.WriteLine("------------------------------------------------------");
+Console.WriteLine("c_operation({0}, cube)    : {1}", x, c_operation(x, cube));
+// END CALLBACK -----------------------------------------------------------------------------
+

@@ -10,7 +10,7 @@
 @code {
     public delegate float Fn(float x);
 
-    [DllImport(Global.RLIB)] static extern float c_operation(float x, Fn fn);
+    [DllImport(Global.RLIB)] static extern float execute_fn_f32(Fn handle, float x);
     [DllImport(Global.RLIB)] static extern float cube(float x);
     [DllImport(Global.RLIB)] static extern float square(float x);
 
@@ -29,9 +29,10 @@
 
         board.Add("**CALLBACKS");
         board.Add("Passing a rust funcion as parameter of a Rust function");
-        board.Add(string.Format("c_operation({0}, square)  : {1}", x, c_operation(x, square)));
-        board.Add(string.Format("c_operation({0}, cube)    : {1}", x, c_operation(x, cube)));
-        //
+        board.Add(string.Format("execute(square, {0})  : {1}", x, execute_fn_f32(square,x)));
+        board.Add(string.Format("execute(cube, {0})    : {1}", x, execute_fn_f32(cube, x)));
+        
+        // for pass a C# as parameter need works with pointers (unsafe)
         ExecuteFunctions.Echo += Notify;
         ExecuteFunctions.Run();
 

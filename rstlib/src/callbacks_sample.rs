@@ -1,18 +1,4 @@
 // CALLBACK ---------------------------------------------------------------------------------
-fn operation(x: f32, f: &dyn Fn(f32) -> f32) -> f32 {
-    f(x)
-}
-// signature for C#
-#[no_mangle]
-pub extern "C" fn c_operation(
-    // parameter
-    x: f32,
-    // callback funtion (delagate)
-    callback_fn: unsafe extern "C" fn(f32) -> f32,
-) -> f32 {
-    operation(x, &|n| unsafe { callback_fn(n) })
-}
-
 // sample... operation(2, cube) = 8
 #[no_mangle]
 fn cube(x: f32) -> f32 {

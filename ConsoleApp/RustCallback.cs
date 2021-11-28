@@ -15,26 +15,23 @@ class RustCallback
         WriteLineColor("\nCALLBACKS", ConsoleColor.DarkCyan);
         Console.WriteLine("Passing a C# function as parameter of a Rust function");
         Console.WriteLine("------------------------------------------------------");
-        Console.WriteLine("c_operation({0}, Square)  : {1}", x, c_operation(x, Square));
-        Console.WriteLine("c_operation({0}, Cube)    : {1}", x, c_operation(x, Cube));
+        Console.WriteLine("execute(Square, {0})  : {1}", x, execute_fn_f32(Square,x));
+        Console.WriteLine("execute(Cube, {0})    : {1}", x, execute_fn_f32(Cube, x));
         Console.WriteLine();
         Console.WriteLine("Passing a rust funcion as parameter of a Rust function");
         Console.WriteLine("------------------------------------------------------");
-        Console.WriteLine("c_operation({0}, square)  : {1}", x, c_operation(x, square));
-        Console.WriteLine("c_operation({0}, cube)    : {1}", x, c_operation(x, cube));
-        //
-        WriteLineColor($"execute_fn_f32({x}, cube)    : {execute_fn_f32(cube, x)}", ConsoleColor.DarkCyan);
-        WriteLineColor($"execute_fn_f32({x}, cube)    : {execute_fn_f32(Cube, x)}", ConsoleColor.DarkCyan);
+        Console.WriteLine("execute(square, {0})  : {1}", x, execute_fn_f32(square, x));
+        Console.WriteLine("execute(cube, {0})    : {1}", x, execute_fn_f32(cube, x));
     }
-
-    [DllImport(RLIB)] static extern float c_operation(float x, Fn fn);
+    // references
+    [DllImport(RLIB)] static extern float execute_fn_f32(Fn handle, float x);
     [DllImport(RLIB)] static extern float cube(float x);
     [DllImport(RLIB)] static extern float square(float x);
-    //
-    [DllImport(RLIB)] static extern float execute_fn_f32(Fn handle, float x);
 }
 
-// Advanced
+/// <summary>
+/// For wasm, Emscripten works with pointer in callbacks
+/// </summary>
 unsafe class RustCallbackWasm
 {
     public void Run()
@@ -42,8 +39,8 @@ unsafe class RustCallbackWasm
         WriteLineColor("\nRust Callback Wasm".ToUpper(), ConsoleColor.Cyan);
 
         float x = 2;
-        Console.WriteLine("execute_fn_f32(*Cube, {0}) = {1}", x, execute_fn_f32((IntPtr)OnCube, x));
-        Console.WriteLine("execute_fn_f32(*CubeRoot, {0}) = {1}", x, execute_fn_f32((IntPtr)OnCubeRoot, x));
+        Console.WriteLine("execute(*Cube, {0})     : {1}", x, execute_fn_f32((IntPtr)OnCube, x));
+        Console.WriteLine("execute(*CubeRoot, {0}) : {1}", x, execute_fn_f32((IntPtr)OnCubeRoot, x));
     }
 
     const double THIRD = 1.0 / 3.0;
@@ -55,6 +52,5 @@ unsafe class RustCallbackWasm
     static readonly delegate* unmanaged<float, float> OnCube = &Cube;
     static readonly delegate* unmanaged<float, float> OnCubeRoot = &CubeRoot;
 
-    // caviar.rs
     [DllImport(RLIB)] static extern float execute_fn_f32(IntPtr handle, float x);
 }
