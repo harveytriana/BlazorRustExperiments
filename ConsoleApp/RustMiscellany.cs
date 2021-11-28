@@ -1,5 +1,6 @@
 ﻿namespace ConsoleApp;
 
+using System.Text;
 using static Global;
 
 /// <summary>
@@ -15,6 +16,10 @@ class RustMiscellany
     // [DllImport(App.RLIB)] static extern void print_string(byte[] utf8Text);
     [DllImport(RLIB)] static extern IntPtr get_some_string();
     [DllImport(RLIB)] static extern IntPtr describe_person(int age);
+    // in-out sample
+    [DllImport(RLIB)] static extern IntPtr reverse_inptr([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    // OR **
+    [DllImport(RLIB)] static extern IntPtr reverse_inptr(byte[] utf8Text);
 
     public static void Run()
     {
@@ -59,6 +64,23 @@ class RustMiscellany
         ptr = describe_person(age);
          
         Console.WriteLine("describe_person(age: {0}) : {1}",age, ptr.TextFromPointer());
+        
+        
+        // METHOD 1
+        var quote = "« All that we see or seem is but a dream within a dream. » EAP";
+        var p = reverse_inptr(quote);
+        var quoteReversed = Marshal.PtrToStringUTF8(p);
+
+        WriteLineColor($"Quote         : {quote}", ConsoleColor.Yellow);
+        WriteLineColor($"Reverse Quote : {quoteReversed}", ConsoleColor.Yellow);
+
+        // METHOD 2
+        var bytes = Encoding.UTF8.GetBytes(quote);
+        var quotePtr = reverse_inptr(bytes);
+        quoteReversed = Marshal.PtrToStringUTF8(quotePtr);
+
+        WriteLineColor($"Reverse Quote : {quoteReversed}", ConsoleColor.Cyan);
+
     }
 }
 

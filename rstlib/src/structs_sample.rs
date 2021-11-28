@@ -18,7 +18,13 @@ pub extern "C" fn get_parallelepiped() -> Parallelepiped {
     }
 }
 
-// return a static struct in a pointer
+#[no_mangle]
+pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
+    let volume = p.length * p.width * p.height;
+    return volume;
+}
+
+// work around for wasm --------------------------------------------------
 static mut _P: Parallelepiped = Parallelepiped {
     length: 0.0,
     width: 0.0,
@@ -28,16 +34,7 @@ static mut _P: Parallelepiped = Parallelepiped {
 #[no_mangle]
 pub extern "C" fn get_parallelepiped_ptr() -> *mut Parallelepiped {
     unsafe {
-        // dummy
-        _P.length = 1.7;
-        _P.width = 2.2;
-        _P.height = 1.9;
+        _P = get_parallelepiped();
         &mut _P
     }
-}
-
-#[no_mangle]
-pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
-    let volume = p.length * p.width * p.height;
-    return volume;
 }

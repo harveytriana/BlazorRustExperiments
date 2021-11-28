@@ -18,28 +18,27 @@ class RustStruct
     */
 
     [DllImport(RLIB)] static extern Parallelepiped get_parallelepiped();
-    [DllImport(RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
     [DllImport(RLIB)] static extern IntPtr get_parallelepiped_ptr();
+    [DllImport(RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 
     public static void Run()
     {
-        Console.WriteLine("\nSTRUCT SAMPLE");
+        WriteLineColor("STRUCT SAMPLE", ConsoleColor.White);
         Console.WriteLine("\nGetting a Rust's struct:");
         // call rust functions
         var parallelepiped = get_parallelepiped();
         var volume = get_parallelepiped_volume(parallelepiped);
 
-        // show it
-        Console.WriteLine("Length : {0}", parallelepiped.length);
-        Console.WriteLine("Width  : {0}", parallelepiped.width);
-        Console.WriteLine("Height : {0}", parallelepiped.height);
-
+        Console.WriteLine("Deferenced object: {0}", parallelepiped);
         Console.WriteLine("\nCalling a Rust fuction wih a C# struct as parameter:");
-        Console.WriteLine("Volume : {0:N2}", volume);
+        Console.WriteLine("Volume       : {0:N2}", volume);
+        // struct create from C#
+        Console.WriteLine("Volume Other : {0:N2}", get_parallelepiped_volume(new Parallelepiped(1, 2, 3)));
 
-        Console.WriteLine("\nUsing Pointers");
-        var pointer = get_parallelepiped_ptr();
-        var p = Marshal.PtrToStructure<Parallelepiped>(pointer);
-        Console.WriteLine("Deferenced object: {0}", p);
+        WriteLineColor("\nUsing Pointers", ConsoleColor.Cyan);
+        var ptr = get_parallelepiped_ptr();
+        var p = Marshal.PtrToStructure<Parallelepiped>(ptr);
+        Console.WriteLine("Pointer     : {0}", ptr);
+        Console.WriteLine("Deferenced  : {0}", p);
     }
 }

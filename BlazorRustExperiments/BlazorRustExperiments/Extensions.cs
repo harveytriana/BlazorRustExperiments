@@ -17,6 +17,11 @@ static class Extensions
         return Encoding.UTF8.GetBytes(text);
     }
 
+    public static string TextFromUtf8(this byte[] utf8)
+    {
+        return Encoding.UTF8.GetString(utf8);
+    }
+
     public static string PrettyJson(this string plainJson)
     {
         var options = new JsonSerializerOptions() {
