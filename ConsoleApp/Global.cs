@@ -1,5 +1,4 @@
-﻿// 
-namespace ConsoleApp;
+﻿namespace ConsoleApp;
 
 public static class Global
 {
