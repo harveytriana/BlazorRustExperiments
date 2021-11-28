@@ -34,60 +34,60 @@
     {
         hello_world(); // console output
 
-        board.Add("**CALLING A MATH FUNCTION");
+        board.Print("**CALLING A MATH FUNCTION");
         float x = 9, y = 11, h = hypotenuse(x, y);
-        board.Add(string.Format("From Rust Library, Hypotenuse({0}, {1}) = {2}\n", x, y, h));
+        board.Print(string.Format("From Rust Library, Hypotenuse({0}, {1}) = {2}\n", x, y, h));
 
-        board.Add("**COUNTER FROM EMULATED CLOSURE");
-        board.Add($"Counter: {counter()}");
-        board.Add($"Counter: {counter()}");
-        board.Add($"Counter: {counter()}");
-        board.Add($"Counter: {counter()}");
-        board.Add($"Counter: {counter()}\n");
+        board.Print("**COUNTER FROM EMULATED CLOSURE");
+        board.Print($"Counter: {counter()}");
+        board.Print($"Counter: {counter()}");
+        board.Print($"Counter: {counter()}");
+        board.Print($"Counter: {counter()}");
+        board.Print($"Counter: {counter()}\n");
 
         // STRINGS
         // ---------------------------------------------------------
-        board.Add("**SENDING STRINGS");
-        board.Add("Send a string to Rust (with extended characters)");
+        board.Print("**SENDING STRINGS");
+        board.Print("Send a string to Rust (with extended characters)");
 
         var s = "« Quien descubre el quién soy descubrirá el quién eres » Neruda";
 
-        board.Add($"print_string('{s}')", "brown");
+        board.Print($"print_string('{s}')", "brown");
         print_string(s);
-        board.Add("See the browser console output\n", "coral");
+        board.Print("See the browser console output\n", "coral");
 
         // ** ok: but moore complexity
         // print_string("« Esto es un árbol »".Utf8Text());
 
         // getting a string from lib
-        board.Add("**GETTING STRINGS");
+        board.Print("**GETTING STRINGS");
 
         var ptr = get_some_string();
         var text = Marshal.PtrToStringUTF8(ptr);
         // OR
         // var text = p.TextFromPointer();
 
-        board.Add($"String pointer : {ptr}");
-        board.Add($"Dereferenced   : {text}\n");
+        board.Print($"String pointer : {ptr}");
+        board.Print($"Dereferenced   : {text}\n");
 
-        board.Add("**STRING FUNCTION");
+        board.Print("**STRING FUNCTION");
         var age = 18;
         var desc = describe_person(age); // this is a pointer
-        board.Add(string.Format("describe_person(age: 18) : {0}\n", desc.TextFromPointer()));
+        board.Print(string.Format("describe_person(age: 18) : {0}\n", desc.TextFromPointer()));
 
-        board.Add("**STRUCTURES");
+        board.Print("**STRUCTURES");
 
         var structPointer = get_parallelepiped_ptr();
         var parallelepiped = Marshal.PtrToStructure<Parallelepiped>(structPointer);
         var volume = get_parallelepiped_volume(parallelepiped);
 
         // show it
-        board.Add($"Get pointer       : {structPointer}");
-        board.Add($"Marshal to Struct : {parallelepiped}");
-        board.Add($"Length            : {parallelepiped.length:N2}");
-        board.Add($"Width             : {parallelepiped.width:N2}");
-        board.Add($"Height            : {parallelepiped.height:N2}\n");
-        board.Add("Call a rust function passing a C# struct as parameter");
-        board.Add($"Volume            : {volume:N2}");
+        board.Print($"Get pointer       : {structPointer}");
+        board.Print($"Marshal to Struct : {parallelepiped}");
+        board.Print($"Length            : {parallelepiped.length:N2}");
+        board.Print($"Width             : {parallelepiped.width:N2}");
+        board.Print($"Height            : {parallelepiped.height:N2}\n");
+        board.Print("Call a rust function passing a C# struct as parameter");
+        board.Print($"Volume            : {volume:N2}");
     }
 }

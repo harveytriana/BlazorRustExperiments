@@ -28,12 +28,12 @@
 
     readonly string _baseStyle = "margin-top:2px;margin-bottom:2px;margin-left:20px;margin-right:20px;";
 
-    public void Add(string text = null)
+    public void Print(string text = null)
     {
-        Add(text, DefaultColor);
+        Print(text, DefaultColor);
     }
 
-    public void Add(string text, string color)
+    public void Print(string text, string color)
     {
         if (text.Contains("\n")) {
             foreach (var i in text.Split('\n')) {

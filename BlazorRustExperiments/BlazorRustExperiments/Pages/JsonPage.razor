@@ -54,20 +54,20 @@
     void RunSamples()
     {
         // READING -----------------------------------------------------------------------------
-        board.Add("**READING JSON");
+        board.Print("**READING JSON");
 
         var jsPointer = get_user(79);
         var js = jsPointer.TextFromPointer();
         var user = JsonSerializer.Deserialize<User>(js);
 
-        board.Add(string.Format("JSON data obtained from the library:\n{0}\n", js.PrettyJson()));
-        board.Add(string.Format("Identifier : {0}", user.Id));
-        board.Add(string.Format("First name : {0}", user.Person.FirstName));
-        board.Add(string.Format("Last name  : {0}", user.Person.LastName));
-        board.Add(string.Format("Age        : {0}", user.Person.Age));
+        board.Print(string.Format("JSON data obtained from the library:\n{0}\n", js.PrettyJson()));
+        board.Print(string.Format("Identifier : {0}", user.Id));
+        board.Print(string.Format("First name : {0}", user.Person.FirstName));
+        board.Print(string.Format("Last name  : {0}", user.Person.LastName));
+        board.Print(string.Format("Age        : {0}", user.Person.Age));
 
         // SENDING -----------------------------------------------------------------------------
-        board.Add("\n**SENDING JSON");
+        board.Print("\n**SENDING JSON");
         // random object
         var alisson = new User {
             Id = 9999999,
@@ -81,13 +81,13 @@
         };
         js = JsonSerializer.Serialize(alisson);
 
-        board.Add(string.Format("JSON data will send to the library:\n{0}\n", js.PrettyJson()));
+        board.Print(string.Format("JSON data will send to the library:\n{0}\n", js.PrettyJson()));
         // send to lib
         try {
             post_user(js);
         }
         catch { }
-        board.Add("\nSee the console output for results.", "coral");
+        board.Print("\nSee the console output for results.", "coral");
 
     }
 

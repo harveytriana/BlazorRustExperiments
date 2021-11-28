@@ -26,19 +26,19 @@
     {
         float x = 7.0F;
 
-        board.Add("**CALLBACKS");
-        board.Add("Passing a rust funcion as parameter of a Rust function");
-        board.Add(string.Format("execute(square, {0})  : {1}", x, execute_fn_f32(square,x)));
-        board.Add(string.Format("execute(cube, {0})    : {1}", x, execute_fn_f32(cube, x)));
+        board.Print("**CALLBACKS");
+        board.Print("Passing a rust funcion as parameter of a Rust function");
+        board.Print(string.Format("execute(square, {0})  : {1}", x, execute_fn_f32(square,x)));
+        board.Print(string.Format("execute(cube, {0})    : {1}", x, execute_fn_f32(cube, x)));
         
         // for pass a C# as parameter need works with pointers (unsafe)
         ExecuteFunctions.Echo += Notify;
         ExecuteFunctions.Run();
 
-        board.Add("");
-        board.Add("**EVENTS");
-        board.Add("Look activity at the browser console output", "coral");
-        board.Add("Processing...", "red");
+        board.Print("");
+        board.Print("**EVENTS");
+        board.Print("Look activity at the browser console output", "coral");
+        board.Print("Processing...", "red");
 
         // display content
         await Task.Delay(600);
@@ -47,20 +47,20 @@
         CallbackEvent.Echo += Notify;
         CallbackEvent.RunEvents();
 
-        board.Add("Once again...", "red");
+        board.Print("Once again...", "red");
 
         await InvokeAsync(StateHasChanged);
         await Task.Delay(600);
 
         CallbackEvent.RunEvents();
 
-        board.Add("END");
+        board.Print("END");
     }
 
     async Task Notify(string message)
     {
         Console.WriteLine("Echo: {0}", message);
-        board.Add(message);
+        board.Print(message);
 
         await Task.Delay(0);
     }
