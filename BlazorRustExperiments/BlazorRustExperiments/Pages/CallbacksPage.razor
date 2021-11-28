@@ -10,9 +10,9 @@
 @code {
     public delegate float Fn(float x);
 
-    [DllImport(Global.RLIB)] static extern float execute_fn_f32(Fn handle, float x);
-    [DllImport(Global.RLIB)] static extern float cube(float x);
-    [DllImport(Global.RLIB)] static extern float square(float x);
+    [DllImport(RLIB)] static extern float execute_fn_f32(Fn handle, float x);
+    [DllImport(RLIB)] static extern float cube(float x);
+    [DllImport(RLIB)] static extern float square(float x);
 
     Board board;
 

@@ -36,7 +36,7 @@ public unsafe class CallbackEvent
     // extern ---------------------------------------------------------------
     [DllImport(RLIB)] static extern void UnmanagedPrompt(IntPtr notify);
     // ** theory
-    // [DllImport(Global.RLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> notify);
+    // [DllImport(RLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> notify);
 }
 
 unsafe class ExecuteFunctions

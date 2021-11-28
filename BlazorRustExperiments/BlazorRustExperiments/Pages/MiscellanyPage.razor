@@ -6,21 +6,21 @@
 <Board @ref="board" />
 
 @code {
-    [DllImport(Global.RLIB)] static extern void hello_world();
-    [DllImport(Global.RLIB)] static extern float hypotenuse(float x, float y);
-    [DllImport(Global.RLIB)] static extern int counter();
+    [DllImport(RLIB)] static extern void hello_world();
+    [DllImport(RLIB)] static extern float hypotenuse(float x, float y);
+    [DllImport(RLIB)] static extern int counter();
 
     // STRINGS
-    [DllImport(Global.RLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    [DllImport(RLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
     // OR **
-    // [DllImport(Global.RLIB)] static extern void print_string(byte[] utf8Text);
-    [DllImport(Global.RLIB)] static extern IntPtr get_some_string();
-    [DllImport(Global.RLIB)] static extern IntPtr describe_person(int age);
+    // [DllImport(RLIB)] static extern void print_string(byte[] utf8Text);
+    [DllImport(RLIB)] static extern IntPtr get_some_string();
+    [DllImport(RLIB)] static extern IntPtr describe_person(int age);
 
     // STRUCTURES
     record struct Parallelepiped(float length, float width, float height);
-    [DllImport(Global.RLIB)] static extern IntPtr get_parallelepiped_ptr();
-    [DllImport(Global.RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
+    [DllImport(RLIB)] static extern IntPtr get_parallelepiped_ptr();
+    [DllImport(RLIB)] static extern float get_parallelepiped_volume(Parallelepiped p);
 
     Board board;
 
@@ -91,6 +91,4 @@
         board.Add("Call a rust function passing a C# struct as parameter");
         board.Add($"Volume            : {volume:N2}");
     }
-
-
 }

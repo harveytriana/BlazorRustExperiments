@@ -8,9 +8,9 @@
 <Board @ref="board" />
 
 @code {
-    [DllImport(Global.RLIB)] static extern IntPtr get_user(int user_id);
-    [DllImport(Global.RLIB)] static extern IntPtr describe_person(int age);
-    [DllImport(Global.RLIB)] static extern void post_user([MarshalAs(UnmanagedType.LPUTF8Str)] string userJson);
+    [DllImport(RLIB)] static extern IntPtr get_user(int user_id);
+    [DllImport(RLIB)] static extern IntPtr describe_person(int age);
+    [DllImport(RLIB)] static extern void post_user([MarshalAs(UnmanagedType.LPUTF8Str)] string js);
 
     class Person
     {
@@ -28,9 +28,9 @@
         [JsonPropertyName("user_id")]
         public int Id { get; set; }
         [JsonPropertyName("person")]
-        public Person? Person { get; set; }
+        public Person Person { get; set; }
         [JsonPropertyName("password")]
-        public string? Password { get; set; }
+        public string Password { get; set; }
     }
     // OR
     //record Person(
@@ -69,26 +69,27 @@
 
         // SENDING -----------------------------------------------------------------------------
         board.Add("\n**SENDING JSON");
-
+        // random object
         var alisson = new User {
-            Id = 789456123,
+            Id = 9999999,
             Password = "hashed password",
             Person = new Person {
-                Id = 123,
+                Id = 1234,
                 FirstName = "Alisson Johana",
                 LastName = "Triana",
                 Age = 18,
             }
         };
+        js = JsonSerializer.Serialize(alisson);
 
-        var alissonJson = JsonSerializer.Serialize(alisson);
-
-        board.Add(string.Format("JSON data will send to the library:\n{0}\n", alissonJson.PrettyJson()));
-        board.Add("\nSee the console output for results.", "coral");
+        board.Add(string.Format("JSON data will send to the library:\n{0}\n", js.PrettyJson()));
+        // send to lib
         try {
-            post_user(alissonJson);
+            post_user(js);
         }
         catch { }
+        board.Add("\nSee the console output for results.", "coral");
+
     }
 
 }
