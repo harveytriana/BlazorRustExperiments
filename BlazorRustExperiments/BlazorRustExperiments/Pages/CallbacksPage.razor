@@ -45,14 +45,14 @@
 
         // Experimental
         CallbackEvent.Echo += Notify;
-        CallbackEvent.RunEvents();
+        CallbackEvent.RunEvents(10);
 
         board.Print("Once again...", "red");
 
         await InvokeAsync(StateHasChanged);
         await Task.Delay(600);
 
-        CallbackEvent.RunEvents();
+        CallbackEvent.RunEvents(10);
 
         board.Print("END");
     }

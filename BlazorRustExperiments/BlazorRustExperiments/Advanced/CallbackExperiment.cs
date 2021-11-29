@@ -17,14 +17,10 @@ public unsafe class CallbackEvent
 
     static readonly delegate* unmanaged<int, void> OnRaiseNumberPointer = &OnRaiseNumber;
 
-    public static void RunEvents()
+    public static void RunEvents(int count)
     {
         Console.WriteLine("\nRunning Rust...");
-
-        // call rust method
-        UnmanagedPrompt((IntPtr)OnRaiseNumberPointer);
-        // ** theory
-        // UnmanagedPrompt(OnRaiseNumberPointer);
+        unmanaged_prompt((IntPtr)OnRaiseNumberPointer, count);
     }
 
     [UnmanagedCallersOnly]
@@ -33,10 +29,8 @@ public unsafe class CallbackEvent
         Echo?.Invoke($"Arrives external number: {number}");
     }
 
-    // extern ---------------------------------------------------------------
-    [DllImport(RLIB)] static extern void UnmanagedPrompt(IntPtr notify);
-    // ** theory
-    // [DllImport(RLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> notify);
+    // extern -----------------------------------------------------------------------------
+    [DllImport(RLIB)] static extern void unmanaged_prompt(IntPtr notify, int count);
 }
 
 unsafe class ExecuteFunctions
@@ -47,8 +41,8 @@ unsafe class ExecuteFunctions
     {
         Echo?.Invoke("Passing a C# fucntion as delegate pointer to Rust");
         float x = 2;
-        Echo?.Invoke(string.Format("execute_fn_f32(*Cube, {0}) = {1}", x, execute_fn_f32((IntPtr)OnCube, x)));
-        Echo?.Invoke(string.Format("execute_fn_f32(*CubeRoot, {0}) = {1}", x, execute_fn_f32((IntPtr)OnCubeRoot, x)));
+        Echo?.Invoke(string.Format("execute(square, {0})    : {1}", x, execute_fn_f32((IntPtr)OnCube, x)));
+        Echo?.Invoke(string.Format("execute(*CubeRoot, {0}) : {1}", x, execute_fn_f32((IntPtr)OnCubeRoot, x)));
     }
 
     const double THIRD = 1.0 / 3.0;

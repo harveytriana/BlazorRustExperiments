@@ -12,7 +12,7 @@ static class Extensions
         return Marshal.PtrToStringUTF8(pointer);
     }
 
-    public static byte[] Utf8Text(this string text)
+    public static byte[] TextToBytes(this string text)
     {
         return Encoding.UTF8.GetBytes(text);
     }

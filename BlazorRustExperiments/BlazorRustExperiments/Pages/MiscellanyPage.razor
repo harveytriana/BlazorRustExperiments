@@ -10,11 +10,9 @@
     [DllImport(RLIB)] static extern int counter();
 
     // STRINGS
-    [DllImport(RLIB)] static extern void print_string([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
-    // OR **
-    // [DllImport(RLIB)] static extern void print_string(byte[] utf8Text);
-    [DllImport(RLIB)] static extern IntPtr get_some_string();
-    [DllImport(RLIB)] static extern IntPtr describe_person(int age);
+    [DllImport(RLIB)] static extern IntPtr reverse_inptr([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    // Second optuion
+    [DllImport(RLIB)] static extern IntPtr reverse_inptr(byte[] utf8Text);
 
     // STRUCTURES
     record struct Parallelepiped(float length, float width, float height);
@@ -32,50 +30,37 @@
 
     void Miscellany()
     {
-        hello_world(); // console output
+        board.Print("**HELLO WORLD");
+        hello_world();
+        board.Print("See the browser console output\n", "coral");
 
         board.Print("**CALLING A MATH FUNCTION");
         float x = 9, y = 11, h = hypotenuse(x, y);
         board.Print(string.Format("From Rust Library, Hypotenuse({0}, {1}) = {2}\n", x, y, h));
 
-        board.Print("**COUNTER FROM EMULATED CLOSURE");
-        board.Print($"Counter: {counter()}");
-        board.Print($"Counter: {counter()}");
-        board.Print($"Counter: {counter()}");
-        board.Print($"Counter: {counter()}");
-        board.Print($"Counter: {counter()}\n");
-
         // STRINGS
         // ---------------------------------------------------------
-        board.Print("**SENDING STRINGS");
-        board.Print("Send a string to Rust (with extended characters)");
+        board.Print("**STRINGS FUNCTION");
+        board.Print("Send a string to Rust as get an string as result");
 
-        var s = "« Quien descubre el quién soy descubrirá el quién eres » Neruda";
+        var quote = "« All that we see or seem is but a dream within a dream. » E.A.P.";
+        var p = reverse_inptr(quote);
+        var quoteReversed = p.TextFromPointer();
 
-        board.Print($"print_string('{s}')", "brown");
-        print_string(s);
-        board.Print("See the browser console output\n", "coral");
+        board.Print("Quote:");
+        board.Print(quote, "brown");
+        board.Print("Reversed Quote:");
+        board.Print(quoteReversed, "brown");
 
-        // ** ok: but moore complexity
-        // print_string("« Esto es un árbol »".Utf8Text());
+        var bytes = quote.TextToBytes();
+        var quotePtr = reverse_inptr(bytes);
+        quoteReversed = p.TextFromPointer();
 
-        // getting a string from lib
-        board.Print("**GETTING STRINGS");
+        board.Print($"Bytes {bytes.Length}");
+        board.Print("Reversed Quote:");
+        board.Print(quoteReversed, "brown");
 
-        var ptr = get_some_string();
-        var text = Marshal.PtrToStringUTF8(ptr);
-        // OR
-        // var text = p.TextFromPointer();
-
-        board.Print($"String pointer : {ptr}");
-        board.Print($"Dereferenced   : {text}\n");
-
-        board.Print("**STRING FUNCTION");
-        var age = 18;
-        var desc = describe_person(age); // this is a pointer
-        board.Print(string.Format("describe_person(age: 18) : {0}\n", desc.TextFromPointer()));
-
-        board.Print("**STRUCTURES");
+        board.Print("\n**STRUCTURES");
 
         var structPointer = get_parallelepiped_ptr();
         var parallelepiped = Marshal.PtrToStructure<Parallelepiped>(structPointer);
@@ -89,5 +74,12 @@
         board.Print($"Height            : {parallelepiped.height:N2}\n");
         board.Print("Call a rust function passing a C# struct as parameter");
         board.Print($"Volume            : {volume:N2}");
+
+        board.Print("**\bCOUNTER FROM EMULATED CLOSURE");
+        board.Print($"Counter: {counter()}");
+        board.Print($"Counter: {counter()}");
+        board.Print($"Counter: {counter()}");
+        board.Print($"Counter: {counter()}");
+        board.Print($"Counter: {counter()}\n");
     }
 }
