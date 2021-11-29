@@ -10,8 +10,8 @@ pub struct Parallelepiped {
 #[no_mangle]
 // Not use in Emscripten's wasm : (
 pub extern "C" fn get_parallelepiped() -> Parallelepiped {
-    // dummy
     Parallelepiped {
+        /* random for example */
         length: 1.7,
         width: 2.2,
         height: 1.9,
@@ -21,7 +21,7 @@ pub extern "C" fn get_parallelepiped() -> Parallelepiped {
 #[no_mangle]
 pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
     let volume = p.length * p.width * p.height;
-    return volume;
+    volume
 }
 
 // work around for wasm --------------------------------------------------
@@ -32,9 +32,7 @@ static mut _P: Parallelepiped = Parallelepiped {
 };
 
 #[no_mangle]
-pub extern "C" fn get_parallelepiped_ptr() -> *mut Parallelepiped {
-    unsafe {
-        _P = get_parallelepiped();
-        &mut _P
-    }
+pub unsafe extern "C" fn get_parallelepiped_ptr() -> *const Parallelepiped {
+    _P = get_parallelepiped();
+    &_P
 }

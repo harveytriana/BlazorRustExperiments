@@ -13,17 +13,17 @@ class RustCallback
     {
         float x = 7.0F;
         WriteLineColor("\nCALLBACKS", ConsoleColor.DarkCyan);
+        Console.WriteLine("Passing a rust function as parameter of a Rust function");
+        Console.WriteLine("------------------------------------------------------");
+        Console.WriteLine("execute(square, {0})  : {1}", x, execute_fn_f32(square, x));
+        Console.WriteLine("execute(cube, {0})    : {1}", x, execute_fn_f32(cube, x));
+        Console.WriteLine();
         Console.WriteLine("Passing a C# function as parameter of a Rust function");
         Console.WriteLine("------------------------------------------------------");
         Console.WriteLine("execute(Square, {0})  : {1}", x, execute_fn_f32(Square,x));
         Console.WriteLine("execute(Cube, {0})    : {1}", x, execute_fn_f32(Cube, x));
-        Console.WriteLine();
-        Console.WriteLine("Passing a rust funcion as parameter of a Rust function");
-        Console.WriteLine("------------------------------------------------------");
-        Console.WriteLine("execute(square, {0})  : {1}", x, execute_fn_f32(square, x));
-        Console.WriteLine("execute(cube, {0})    : {1}", x, execute_fn_f32(cube, x));
     }
-    // references
+
     [DllImport(RLIB)] static extern float execute_fn_f32(Fn handle, float x);
     [DllImport(RLIB)] static extern float cube(float x);
     [DllImport(RLIB)] static extern float square(float x);

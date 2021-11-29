@@ -1,8 +1,8 @@
 // CALLBACK ---------------------------------------------------------------------------------
-// floats: f(x). Use: execute_fn_f32(<delegate function>, <float aprameter>)
+// floats: f(x). Use: execute(<delegate function>, x)
 #[no_mangle]
 pub extern "C" fn execute_fn_f32(
-    // callbak
+    // callback
     callback: extern "C" fn(f32) -> f32,
     // parameters
     x: f32,
@@ -11,12 +11,11 @@ pub extern "C" fn execute_fn_f32(
     y
 }
 
-// sample... operation(2, cube) = 8
 #[no_mangle]
 fn cube(x: f32) -> f32 {
     x * x * x
 }
-// sample... operation(2, square) = 8
+
 #[no_mangle]
 fn square(x: f32) -> f32 {
     x * x
@@ -30,12 +29,13 @@ use std::time::Duration;
 pub type PromptHandler = Option<unsafe extern "C" fn(_: i32) -> ()>;
 
 #[no_mangle]
-pub unsafe extern "C" fn UnmanagedPrompt(
+pub unsafe extern "C" fn unmanaged_prompt(
     // callback
     notify: PromptHandler,
+    count: i32,
 ) {
     let mut i = 1;
-    while i <= 10 {
+    while i <= count {
         notify.expect("non-null function pointer")(i);
         // simulate
         sleep(Duration::from_millis(200));
@@ -44,6 +44,7 @@ pub unsafe extern "C" fn UnmanagedPrompt(
     }
 }
 
+// Other sample
 #[no_mangle]
 pub extern "C" fn get_serie(
     // callbak

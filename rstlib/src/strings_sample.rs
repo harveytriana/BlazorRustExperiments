@@ -46,7 +46,7 @@ fn reverse(text: String) -> String {
 }
 // C wrap
 #[no_mangle]
-pub extern "C" fn reverse_inptr(text_pointer: *const c_char) -> *mut c_char {
+pub extern "C" fn reverse_inptr(text_pointer: *const c_char) -> *const c_char {
     let c_str = unsafe { CStr::from_ptr(text_pointer) };
     let r_str = c_str.to_str().unwrap();
     let text = r_str.to_string();

@@ -6,13 +6,12 @@ using static Global;
 class RustEvents
 {
     // event
-    delegate void RaiseNumber(int number);
+    delegate void PromptHandler(int number);
 
     public void Run()
     {
         WriteLineColor("\nEVENTS", ConsoleColor.Cyan);
-        // call a rust method
-        UnmanagedPrompt(OnRaiseNumber);
+        unmanaged_prompt(OnRaiseNumber, 12);
     }
 
     private void OnRaiseNumber(int number)
@@ -21,18 +20,17 @@ class RustEvents
     }
 
     // extern ----------------------------------------------------------------------
-    [DllImport(RLIB)] static extern void UnmanagedPrompt(RaiseNumber fn);
+    [DllImport(RLIB)] static extern void unmanaged_prompt(PromptHandler fn, int count);
 }
 
 unsafe class RustEventsWasm
 {
-    readonly delegate *unmanaged<int, void> OnRaiseNumberPointer = &OnRaiseNumber;
+    readonly delegate* unmanaged<int, void> OnRaiseNumberPointer = &OnRaiseNumber;
 
     public void Run()
     {
         WriteLineColor("\nEVENTS", ConsoleColor.Cyan);
-        // call rust method
-        UnmanagedPrompt(OnRaiseNumberPointer);
+        unmanaged_prompt(OnRaiseNumberPointer, 12);
     }
 
     [UnmanagedCallersOnly]
@@ -41,10 +39,8 @@ unsafe class RustEventsWasm
         Console.WriteLine($"Arrives external number: {number}");
     }
 
-    // extern ---------------------------------------------------------------
-    // [DllImport(App.RLIB)] static extern void UnmanagedPrompt(IntPtr notify);
-    // **
-    [DllImport(RLIB)] static extern void UnmanagedPrompt(delegate *unmanaged<int,void> notify);
+    [DllImport(RLIB)] 
+    static extern void unmanaged_prompt(delegate* unmanaged<int, void> notify, int count);
 }
 
 class RustEvents2

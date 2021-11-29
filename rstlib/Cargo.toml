@@ -9,12 +9,12 @@ name="rstlib"
 # WebAssembly for Emscripten (.a)
 # -----------------------------------------------------------------
 # compile: cargo build --target wasm32-unknown-emscripten --release
-# crate-type = ["staticlib"]
+crate-type = ["staticlib"]
 
 # Dynamic library for C# Console (.dll)
 # -----------------------------------------------------------------
 # compile: cargo build --release
-crate-type = ["dylib"]
+# crate-type = ["dylib"]
 
 [dependencies]
 serde = { version = "1.0.126", features = ["derive"] }

@@ -69,8 +69,7 @@ class RustJson
 
         var alissonJson = JsonSerializer.Serialize(alisson);
 
-        Console.WriteLine("\nJSON data will send to the library:\n{0}\n", alissonJson.PrettyJson());
-
+        Console.WriteLine("\nWill send:\n{0}\n", alissonJson.PrettyJson());
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         try {
             post_user(alissonJson);

@@ -6,6 +6,7 @@ use std::ffi::CStr;
 use std::ffi::CString;
 use std::os::raw::c_char;
 
+// STRUT SAMPLE
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Person {
     person_id: i32,
@@ -27,9 +28,9 @@ pub struct User {
     person: Person,
 }
 
-//
+// RETURN JSON
 #[no_mangle]
-pub fn get_user(user_id: i32) -> *mut c_char {
+pub fn get_user(user_id: i32) -> *const c_char {
     // dummy entity
     let user = User {
         user_id: user_id, // simulate
@@ -47,6 +48,7 @@ pub fn get_user(user_id: i32) -> *mut c_char {
     encode.into_raw()
 }
 
+// JSON AS ARGUMENT
 #[no_mangle]
 pub fn post_user(json_pointer: *const c_char) {
     let c_str = unsafe { CStr::from_ptr(json_pointer) };
@@ -58,4 +60,5 @@ pub fn post_user(json_pointer: *const c_char) {
 
     println!("User is a Rust's Structure:");
     println!("{:?}", user);
+    //  do something...
 }

@@ -7,7 +7,7 @@ class RustStruct
     // C# 10
     record struct Parallelepiped(float length, float width, float height);
     /*
-    Before C# 10
+    // C# 
     [StructLayout(LayoutKind.Sequential)]
     struct Parallelepiped
     {
