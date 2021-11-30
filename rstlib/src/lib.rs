@@ -19,7 +19,6 @@ extern crate serde_json;
 
 mod basic_sample;
 mod callbacks_sample;
-mod closure_sample;
 mod json_sample;
 mod strings_sample;
 mod structs_sample;
