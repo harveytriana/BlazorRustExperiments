@@ -70,7 +70,7 @@ If we are going to work with a console, then the static library does not create 
 
 The configuration file with the characteristics described is as follows
 
-```
+```python
 [package]
 name = "rstlib"
 version = "0.1.0"
@@ -608,11 +608,11 @@ public static class Global
 
 To improve the design, add the image that represents Rust on the cover, and the logo. To present results I used a Blazor component written to emulate a console output.
 
-<img src="file:///C:/_study/Blazor/Articles/BlazorRustExperiments/Screens/index.png" data-align="center">
+![Index](https://github.com/harveytriana/BlazorRustExperiments/blob/master/Screens/index.png)
 
 The Board component driving results:
 
-<img src="file:///C:/_study/Blazor/Articles/BlazorRustExperiments/Screens/bz_cb.png" data-align="center">
+![Board](https://github.com/harveytriana/BlazorRustExperiments/blob/master/Screens/bz_cb.png)
 
 The development possibilities are immense, we work naturally from C#, calling Rust code. Simply great.
 
@@ -636,5 +636,6 @@ It is certainly not difficult to use Rust code in C#, in this article I will dem
 
 Published: 2021-11-29
 
-Source: https://www.blazorspread.net/blogview/rust-in-blazor-webassembly
-Spanish: https://www.blazorspread.net/blogview/rust-en-blazor-webassembly
+**Source**
+- https://www.blazorspread.net/blogview/rust-in-blazor-webassembly
+- Spanish: https://www.blazorspread.net/blogview/rust-en-blazor-webassembly
