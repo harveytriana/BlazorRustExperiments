@@ -636,6 +636,6 @@ It is certainly not difficult to use Rust code in C#, in this article I will dem
 
 Published: 2021-11-29
 
-- Source: 
+**Source**
 - https://www.blazorspread.net/blogview/rust-in-blazor-webassembly
 - Spanish: https://www.blazorspread.net/blogview/rust-en-blazor-webassembly
