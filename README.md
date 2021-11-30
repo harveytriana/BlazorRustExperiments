@@ -1,30 +1,30 @@
-# Una guía concisa sobre cómo usar una biblioteca de Rust en Blazor WASM
+# Rust in Blazor WebAssembly
 
-## Resumen
+*A concise guide on how to use a Rust library in Blazor WASM*
 
-Es posible construir un ensamblado de Rust hacía tecnologías Web basado en Flang/LLVM al estilo Emscripten y usar en Blazor WASM. 
+## Summary
 
-En esta publicación voy a delinear unos pasos pasos fundamentales de cómo se debe codificar para establecer esa simbiosis entre el mundo Rust y el mundo C#.
+It is possible to build a Rust assembly to Emscripten-based Web technologies and use it in Blazor WASM. In this post I am going to outline a basic outline of how to code to establish that symbiosis between the Rust world and the C# world.
 
-No pretendo enseñar a usar Rust. Si no conoce este poderoso lenguaje de programación sugiero la guía documentada en las referencias 1 y 2. 
+I do not claim to teach how to use Rust. If you do not know this programming language I suggest the guide documented in references 1 and 2.
 
-## Introducción
+## Introduction
 
-Sería redundante escribir sobre las cualidades de Rust, y hablar de por qué ha despertado el interés de muchos desarrolladores profesionales. Mi interés se consolida cuando sé que se puede usar como una referencia nativa en Blazor. Aquel trino de Steve Sanderson en donde dice «Usando la nueva función de dependencias nativas para Blazor WebAssembly en .NET 6, logré llamar a Rust desde C#, ¡Ambos ejecutándose en el navegador! … Ahora bien, ¿Qué podemos hacer con este nuevo poder?», fue una inspiración que me llevó a profundizar en el tema.
+It would be redundant to write about the qualities of Rust, and talk about why it has piqued the interest of many professional developers. My interest is solidified when I know that it can be used as a native reference in Blazor. That Steve Sanderson tweet where he says: *Using the new native dependencies feature for Blazor WebAssembly in .NET6, I was able to call Rust from C#, both running in the browser! … Now, what can we do with this new power?*, was an inspiration that led me to delve into the subject.
 
-La relación Rust - C# está dada. La primera función externa, el clásico «Hello World!» no puede faltar. El decorador indica que es para usar externamente,
+The Rust - C# relation is given. The first external function, the classic *Hello World!* it can not miss. The decorator indicates that it is to be used externally,
 
-```rust
+```csharp
 #[no_mangle]
 pub fn hello_world() {
     println!("Hello World!");
 }
 ```
 
-Desde C# podemos algo como:
+From C# we can use this function through Platform Invocation (P/Invoke), something like:
 
 ```csharp
-namespace ConsoleApp;
+using System.Runtime.InteropServices;
 using static Global;
 
 class RustMiscellany
@@ -33,30 +33,28 @@ class RustMiscellany
 
     public static void Run()
     {
-        hello_world(); 
+        hello_world();
     }
 }
 ```
 
-Donde RLIB es la ruta de la librería Rust, y existe en una clase global de constantes.
+Where RLIB is the path of the Rust library, and it exists in a global class of constants.
 
-## Arquitectura del proyecto
+## Project architecture
 
-El laboratorio consiste en una solución Blazor WASM net6 sin hospedaje, junto con la librería Rust. En la misma solución .NET agregamos un proyecto de consola net6. En el mismo folder se crea una carpeta en donde irá el proyecto Rust. De esta manera, podemos hacer referencia relativa a las rutas en las librerías sin tener que hacer copias durante el desarrollo. En general el proyecto de consola se usa como un probador ágil de código. No haré mucho énfasis en el proyecto, que bien puede estudiar en la publicación Github.
+The lab consists of a non-hosted Blazor WASM net6 solution, along with the Rust library. In the same .NET solution we add a net6 console project. In the same folder a folder is created where the Rust project will go. In this way, we can make relative reference to the paths in the libraries without having to make a copy during development. In general the console project is used as an agile code tester. I will not put much emphasis on the project, which you may well study in the Github post.
 
-## Creación del proyecto Rust
+## Rust project creation
 
-Asumo que ya tiene el ambiente listo para programar en Rust, si no es así, en la referencia 1 encuentra los pasos. Es simple crear una biblioteca, desde la carpeta donde desea su proyecto ejecute el siguiente comando de terminal:
+I assume that you already have the environment ready to program in Rust, if not, in reference 1 you will find the steps. It is simple to create a library, from the folder where you want your project run the following terminal command:
 
 ```
 cargo new rstlib
 ```
 
-Es más productivo si lo hacemos desde vscode, con la extensión «Rust Extension Pack». (Con la esperanza de que en un futuro no muy lejano podamos trabajar Rust en Visual Studio 20x). 
+After executing this command we have the base files of a Rust project. It is more productive if we do it from *vscode*,  with the *Rust Extension Pack* extension. (In the hope that in the not too distant future we can work on Rust from the Visual Studio 20x IDE).
 
-Después de ejecutar este comando, ahora tenemos una nueva carpeta llamada target y el archivo de configuración cargo.toml. 
-
-Para compilar a wasm en términos de Emscripten, que es lo que entiende Wasm, necesitamos agregar al compilador Rust el soporte a Emscripten. Se instalará usando rustup. La referencia 3 indico la documentación precisa, para resumir, sólo necesita los tres primeros comandos.
+To compile to wasm in Emscripten terms, which is what Wasm understands, we need to add Emscripten support to the Rust compiler. It will be installed using rustup. Reference 3 indicated the precise documentation, to summarize, you only need the first three commands.
 
 ```
 rustup toolchain add stable
@@ -64,43 +62,43 @@ rustup target add asmjs-unknown-emscripten --toolchain stable
 rustup target add wasm32-unknown-emscripten --toolchain stable
 ```
 
-La compilación a emscripten necesita una librería estática, para lo cual en el archivo de configuración especificamos create-type = ["staticlib"]. 
+Compiling to emscripten requires a static library, for which we specify create-type = [staticlib] in the configuration file.
 
-Como una sugerencia y facilidad de desarrollo, es conveniente probar nuestro código Rust contra C#, desde una consola de C#, luego, podemos compilar para Wasm y escalar a Blazor. No obstante es importante aclarar que no todo el código C# que corre en consola es soportado de manera directa por emscripten, existen casos en los que es necesario trabajar directamente con punteros, lo cual también trato en este artículo.  
+As a suggestion and ease of development, it is convenient to test our Rust code with C# support, from a C# console, then we can compile for Wasm and scale to Blazor. However, it is important to clarify that not all the C# code that runs in the console is directly supported by emscripten, there are cases in which it is necessary to work directly with pointers, which I also deal with in this article.
 
-Si vamos a trabajar con una consola, entonces la librería estática no crea una DLL en la compilación, para lo cual intercambiamos el tipo de crate de estático a dinámico. Cuando esté listo para usar en wasm, cambiamos el tipo de librería a estático y compilamos. Estratégicamente dejó los dos en el mismo cargo.toml, y comentó uno o otro según el caso. Esto se puede mejorar con una macro, pero no quiero extender más allá del objetivo de este escrito.
+If we are going to work with a console, then the static library does not create a DLL on compilation, for which we exchange the type of crate from static to dynamic. When it's ready to use in wasm, we change the library type to static and compile. Strategically he left the two in the same position toml, and commented on one or the other depending on the case. This can be improved with a macro, but I don't want to extend beyond the scope of this writing.
 
-El archivo de configuración con las características descritas es como sigue
+The configuration file with the characteristics described is as follows
 
 ```
 [package]
 name = "rstlib"
 version = "0.1.0"
-authors = ["Harvey Triana <harveytriana@gmail.com>"]
+authors = ["Harvey Triana<harveytriana@gmail.com> "]
 
 [lib]
-name="rstlib"
+name = "rstlib"
 
 # WebAssembly for Emscripten (.a)
-# -----------------------------------------------------------------
+# ------------------------------------------------- ----------------
 # compile: cargo build --target wasm32-unknown-emscripten --release
 # crate-type = ["staticlib"]
 
 # Dynamic library for C# Console (.dll)
-# -----------------------------------------------------------------
+# ------------------------------------------------- ----------------
 # compile: cargo build --release
 crate-type = ["dylib"]
 ```
 
-## Interoperabilidad
+## Interoperability
 
-Este articulo esta dirigido a programadores que conocen C#, y están iniciando en Rust, o bien, ya tienen experiencia. Abordaré los casos comunes de lógica de programación con un ejemplo en cada uno. 
+This article is aimed at programmers who know C#, and are starting with Rust, or already have experience. I'll cover the common programming logic cases with an example on each.
 
-## Funciones
+## Functions
 
-Una función matemática que retorna un tipo nativo, y usa parámetros de tipo nativos. Ejemplo, la siguiente función retorna la Hipotenusa dados los dos Catetos.
+A mathematical function that returns a native type, and uses native type parameters. Example, the following function returns the Hypotenuse given the two Legs.
 
-```rust
+```csharp
 #[no_mangle]
 pub fn hypotenuse(x: f32, y: f32) -> f32 {
     let num = x.powf(2.0) + y.powf(2.0);
@@ -108,7 +106,7 @@ pub fn hypotenuse(x: f32, y: f32) -> f32 {
 }
 ```
 
-El código C# para usar esta función luce así:
+The C# code to use this function looks like this:
 
 ```csharp
 [DllImport(RLIB)] static extern float hypotenuse(float x, float y);
@@ -118,15 +116,15 @@ float x = 9, y = 11, h = hypotenuse(x, y);
 Console.WriteLine("From Rust Library, Hypotenuse({0}, {1}) = {2}", x, y, h);
 ```
 
-Note que no es necesario usar **extern "C"** en la firma de ésta función.
+Note that it is not necessary to use **extern "C"** in the signature of this function.
 
-## Cadenas de Texto
+## Text Strings
 
-Trabajar con cadenas de Rust o C/C++ no es simple, ya que estos lenguajes son estrictos en cuanto a su organización en memoria. He visto varias estrategias desde C# para lidiar con ésto,algunas con demasiado código o innecesaria complejidad. Presento acá dos formas de lograr esto. 
+Working with C/C++/Rust strings is not simple, as these languages are strict about their organization in memory. I've seen various strategies since C# to deal with this, some with too much code or unnecessary complexity. We work with pointers. I present here two ways to solve this.
 
-Para iniciar este ejercicio, copie lo siguiente en [https://play.rust-lang.org/](https://play.rust-lang.org/) y ejecutelo.
+To start this exercise, copy the following to [Play Rust](https://play.rust-lang.org/) and run it.
 
-```rust
+```csharp
 fn main() {
     let quote = String::from("« All that we see or seem is but a dream within a dream. » EAP");
     println!("{}", quote);
@@ -139,7 +137,7 @@ fn reverse(text: String) -> String {
 }
 ```
 
-Estamos enviando como parámetro un String, y recibiendo un String en el resultado ¿Cómo usar la función _reverse() _en C#? El problema se divide en dos partes, enviar y recibir Strings. Para conectar el mundo Rust con el de C# necesitamos trabajar con punteros. Envolvemos la función Rust en un tipo y tratamiento que entiende C, y así mismo C#.
+We are sending a String as a parameter, and receiving a String in the result How to use the ```reverse()``` function in C#? The problem is divided into two parts, sending and receiving Strings. To connect the Rust world with the C# world we need to work with pointers. We wrap the Rust function in a type and treatment that understands C, and likewise C#.
 
 ```csharp
 use std::ffi::CStr;
@@ -162,14 +160,14 @@ pub extern "C" fn reverse_inptr(text_pointer: *const c_char) -> *const c_char {
 }
 ```
 
-Es algo complejo, pero resuelve todos los casos de intercambio de texto, aun con caracteres especiales; más adelante podremos agregar un módulo en Rust para generalizar la solución. 
+It is somewhat complex, but it solves all cases of text exchange, even with special characters; later we can add a module in Rust to generalize the solution.
 
-Para usar esta función desde C# Tenemos dos opciones.
+To use this function from C# We have two options.
 
-Primera opción, pasar el parámetro encapsulado en LPUTF8Str, y decodificar el puntero de regreso con `Marshal.PtrToStringUTF8`. Siguiendo el ejemplo,
+First option, pass the encapsulated parameter in LPUTF8Str, and decode the return pointer with Marshal.PtrToStringUTF8. Following the example,
 
 ```csharp
-[DllImport(RLIB)] 
+[DllImport(RLIB)]
 static extern IntPtr reverse_inptr([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
 
 var quote = "« All that we see or seem is but a dream within a dream. » EAP";
@@ -180,10 +178,10 @@ Console.WriteLine($"Quote         : {quote}", ConsoleColor.Yellow);
 Console.WriteLine($"Reverse Quote : {quoteReversed}", ConsoleColor.Yellow);
 ```
 
-Segunda opción, pasar la cadena de texto como un arreglo de bytes UTF8.
+Second option, pass the text string as a UTF8 byte array.
 
 ```csharp
-[DllImport(RLIB)] 
+[DllImport(RLIB)]
 static extern IntPtr reverse_inptr(byte[] utf8Text);
 
 var quote = "« All that we see or seem is but a dream within a dream. » EAP";
@@ -196,22 +194,22 @@ Console.WriteLine($"Quote         : {quote}");
 Console.WriteLine($"Reverse Quote : {quoteReversed}");
 ```
 
-En ambos caso el resultado es el mismo:
+In both cases the result is the same:
 
 ```
-Quote         : « All that we see or seem is but a dream within a dream. » EAP
-Reverse Quote : PAE » .maerd a nihtiw maerd a tub si mees ro ees ew taht llA «
+Quote: «All that we see or seem is but a dream within a dream. »EAP
+Reverse Quote: PAE ».maerd a nihtiw maerd a tub si mees ro ees ew taht llA«
 ```
 
-¿Cuándo usar uno u otro? Opino que el criterio es como prefiera. Se puede simplificar uno u otro caso con extensiones C#; en el proyecto se muestra de esa manera.
+When to use one or the other? I think the criteria is as you prefer. One or the other case can be simplified with C# extensions; in the project it is displayed that way.
 
-El uso de esta estrategia para intercambiar cadenas de texto en Blazor WASM es el mismo, no se requiere tratamiento especial.
+The use of this strategy for exchanging text strings in Blazor WASM is the same, no special handling is required.
 
-## Estructuras
+## Structures
 
-Definamos una estructura cualquiera, con tipos nativos, y un método que devuelva una instancia de ella, y, así mismo, una función que use esta estructura en uno de sus parámetros:
+Let's define any structure, with native types, and a method that returns an instance of it, and, likewise, a function that uses this structure in one of its parameters:
 
-```rust
+```csharp
 #[repr(C)]
 pub struct Parallelepiped {
     pub length: f32,
@@ -235,7 +233,7 @@ pub extern "C" fn get_parallelepiped_volume(p: Parallelepiped) -> f32 {
 }
 ```
 
-El código C# para leer una estructura, y pasar una estructura como parámetro es el siguiente:
+The C# code to read a structure, and pass a structure as a parameter is the following:
 
 ```csharp
 /// C# 10
@@ -251,16 +249,15 @@ var volume = get_parallelepiped_volume(parallelepiped);
 get_parallelepiped_volume(new Parallelepiped(1, 2, 3)));
 ```
 
-Noté que se está empleando un **record struct**, en vez de una clásico struct; menos código, mayor productividad. Igualmente puede crear la estructura clásica y usarlo acá, no obstante debe agregar un decorador [StructLayout(LayoutKind.Sequential)].
+I noticed that a **record struct** is being used, instead of a classic struct; less code, higher productivity. You can also create the classic structure and use it here, however you must add a [StructLayout (LayoutKind.Sequential)] decorator.
 
-### Trabajo Circundante para usar en WASM
+### Surround Work to use in WASM
 
-Podemos pasar la estructura como parámetro, tal como se describe en el párrafo anterior, pero no recibirla de la misma manera. El compilado Emscripten no deja disponibilidad para eso; se genera una excepción de «discrepancia de firma de función». No obstante, estratégicamente lo podemos resolver a través de punteros.
+We can pass the structure as a parameter, as described in the previous paragraph, but not receive it in the same way. The compiled Emscripten leaves no availability for that; a "function signature mismatch" exception is thrown. However, strategically we can solve it through pointers.
 
-Agregamos una función en Rust que envuelve la función con retorno de una dirección de memoria, y usamos una variable estática en el módulo. 
+We add a function in Rust that wraps the function with return of a memory address, and we use a static variable in the module.
 
-```rust
-// work around for wasm --------------------------------------------------
+```csharp
 static mut _P: Parallelepiped = Parallelepiped {
     length: 0.0,
     width: 0.0,
@@ -271,10 +268,10 @@ static mut _P: Parallelepiped = Parallelepiped {
 pub unsafe extern "C" fn get_parallelepiped_ptr() -> *const Parallelepiped {
     _P = get_parallelepiped();
     &_P
-} 
+}
 ```
 
-En C#:
+In C#:
 
 ```csharp
 [DllImport(RLIB)] static extern IntPtr get_parallelepiped_ptr();
@@ -286,23 +283,23 @@ Console.WriteLine("Pointer     : {0}", ptr);
 Console.WriteLine("Deferenced  : {0}", p);
 ```
 
-Esta solución es efectiva, aunque se debe tener precaución, ya que se requiere la existencia de una variable estática en la librería. Aunque, por tratarse de Wasm, el único cliente es el visualizador. Como mencione, es una solución estratégica, - Si sugieres una mejor solución, excelente; por favor compartela.
+This solution is effective, although caution must be exercised, since the existence of a static variable in the library is required. Although, since it is Wasm, the only client is the viewer. As I mentioned, it is a strategic solution, - If you suggest a better solution, excellent; please share it.
 
-_La complejidad radica en que <code>get_parallelepiped_ptr</code>() devuelve una dirección de la instancia local de la estructura pero su tiempo de vida termina con el retorno de la función. Ese es un comportamiento indefinido en C, C++, o Rust.</em>
+> The complexity is that `get_parallelepiped_ptr()` returns an address of the local instance of the structure but its lifetime ends with the return of the function. That is undefined behavior in C, C++, or Rust.
 
-## Transferencia JSON
+## JSON transfer
 
-La transferencia JSON resuelve toda complejidad de tipos, aún de tipos con profundidad anidada. Para usar JSON en Rust necesitamos un librería externa o crate externo, para esto agregamos la dependencia al archivo de configuración:
+JSON pass-through solves all type complexity, even types with nested depth. To use JSON in Rust we need an external library or external crate, for this we add the dependency to the configuration file, Cargo.toml:
 
 ```
 [dependencies]
-serde = { version = "1.0.126", features = ["derive"] }
+serde = {version = "1.0.126", features = ["derive"]}
 serde_json = "1.0.64"
 ```
 
-Usar JSON en Rust es simple. Creé una estructura anidada para demostrarlo. Veamos el ejemplo.
+Using JSON in Rust is simple. I created a nested structure to demonstrate it. Let's look at the example.
 
-```rust
+```csharp
 extern crate serde;
 extern crate serde_json;
 
@@ -367,9 +364,9 @@ pub fn post_user(json_pointer: *const c_char) {
 }
 ```
 
-Como podrá ver, tan solo es transferencia y lectura de texto, unos decoradores, más el uso de la herramienta de serialización / deserialización de Rust.
+As you can see, it is just transferring and reading text, some decorators, plus the use of Rust's serialization / deserialization tool.
 
-En C# podemos usar una clase, hasta con las convenciones de codificación de C#. 
+In C# we can use a class, even with the coding conventions of C#.
 
 ```csharp
 using System.Text.Json;
@@ -380,7 +377,7 @@ using static Global;
 
 class RustJson
 {
-    [DllImport(RLIB)] 
+    [DllImport(RLIB)]
     static extern IntPtr get_user(int user_id);
     [DllImport(RLIB)]
     static extern void post_user([MarshalAs(UnmanagedType.LPWStr)] string userJson);
@@ -433,11 +430,11 @@ class RustJson
 }
 ```
 
-## Devoluciones de llamada
+## Callbacks
 
-Usaré el caso clásico en donde a una función otra función como parámetro. Ese parámetro es un delegado que permite apuntar a diferentes funciones que cumple la firma del delegado. Por ejemplo, una función f(x) para hacer un cálculo matemático, por ejemplo, Cuadrado, Cubo, Raíz Cúbica, y así sucesivamente. Estas funciones de primer orden pueden ser escritas en Rust o en C#.
+I will use the classic case where to a function another function as a parameter. That parameter is a delegate that allows you to point to different functions that the delegate's signature fulfills. For example, a function f(x) to do a mathematical calculation, for example, Square, Cube, Cube Root, and so on. These first-order functions can be written in Rust or in C#.
 
-```rust
+```csharp
 // floats: f(x). Use: execute(<delegate function>, x)
 #[no_mangle]
 pub extern "C" fn execute_fn(
@@ -461,7 +458,7 @@ fn square(x: f32) -> f32 {
 }
 ```
 
-Del lado C#, usamos esto de la siguiente manera:
+On the C# side, we use this as follows:
 
 ```csharp
 [DllImport(RLIB)] static extern float execute_fn(Fn handle, float x);
@@ -476,7 +473,7 @@ Console.WriteLine("execute(square, {0})  : {1}", x, execute_fn(square, x));
 Console.WriteLine("execute(cube, {0})    : {1}", x, execute_fn(cube, x));
 ```
 
-Ahora, si deseamos pasar una función C# hacia la librería Rust, también es posible. Voy a escribir las mismas funciones, pero del lado de C# e invocarlas indirectamente en Rust.
+Now, if we want to pass a C# function to the Rust library, it is also possible. I'm going to write the same functions, but on the C# side and invoke them indirectly in Rust.
 
 ```csharp
 static float Square(float x) => x * x;
@@ -488,11 +485,11 @@ Console.WriteLine("execute(Square, {0})  : {1}", x, execute_fn(Square, x));
 Console.WriteLine("execute(Cube, {0})    : {1}", x, execute_fn(Cube, x));
 ```
 
-### Trabajo Circundante para usar en WASM
+### Surround Work to use in WASM
 
-Mientras podemos pasar una función Rust al método Rust desde C# en Wasm, no se permite pasar directamente una función C#. La solución nuevamente es trabajar con punteros, en este caso es más avanzado porque necesitamos trabajar en modo unsafe en C#, y decorar la función con [UnmanagedCallersOnly]. Básicamente el delegado lo convertimos a una dirección de memoria, que pasamos al método Rust.
+While we can pass a Rust function to the Rust method from C# in Wasm, it is not allowed to pass a C# function directly. The solution again is to work with pointers, in this case it is more advanced because we need to work in unsafe mode in C#, and decorate the function with [UnmanagedCallersOnly]. Basically we convert the delegate to a memory address, which we pass to the Rust method.
 
-```rust
+```csharp
 unsafe {
 [DllImport(RLIB)] static extern float execute_fn(IntPtr handle, float x);
 
@@ -504,11 +501,11 @@ Console.WriteLine("execute(*Cube, {x}): {execute_fn((IntPtr)OnCube, x)}");
 }
 ```
 
-## Eventos
+## Events
 
-Los eventos involucran delegados. Es decir, el caso es similar al anterior. En este ejemplo, voy a escribir una función en Rust que reciba una función de notificación y la invoque cada determinado tiempo, el invocador recibe el dato desatendidamente.
+The events involve delegates. That is, the case is similar to the previous one. In this example, I am going to write a function in Rust that receives a notification function and invokes it every certain time, the caller receives the data inadvertently.
 
-```rust
+```csharp
 use std::thread::sleep;
 use std::time::Duration;
 
@@ -532,7 +529,7 @@ pub unsafe extern "C" fn unmanaged_prompt(
 }
 ```
 
-En C#:
+In C#:
 
 ```csharp
 delegate void PromptHandler(int number);
@@ -547,13 +544,13 @@ private void OnRaiseNumber(int number)
     Console.WriteLine($"arrives extern number: {number}");
 }
 
-// extern 
+// extern
 [DllImport(RLIB)] static extern void unmanaged_prompt(PromptHandler fn, int count);
 ```
 
-### Trabajo Circundante para usar en WASM
+### Surround Work to use in WASM
 
-Como ya sabemos, no podemos pasar métodos o funciones C# directamente a un librería Rust compilada para Wasm. La estrategia nuevamente recurre a punteros, siendo este caso equivalente al anterior.
+As we already know, we cannot pass C# methods or functions directly to a Rust library compiled for Wasm. The strategy again uses pointers, this case being equivalent to the previous one.
 
 ```csharp
 unsafe class RustEventsWasm
@@ -570,45 +567,74 @@ unsafe class RustEventsWasm
     {
         Console.WriteLine($"Arrives external number: {number}");
     }
-    // extern ---------------------------------------------------------------
+
     [DllImport(RLIB)] static extern void unmanaged_prompt(IntPtr notify, int count);
 }
 ```
 
-En Blazor, el caso impone un reto más, y es que la estrategia usa necesariamente estáticos, lo cual desde una página que no es estática requiere cierto tratamiento especial. Una forma es aislar la lógica en una clase estática, y mediante un evento notificar a la página. Se deben tener precauciones en manejar este esquema para no dejar vínculos perdidos.
+In Blazor, the case imposes one more challenge, and that is that the strategy necessarily uses static, which from a page that is not static requires some special treatment. One way is to isolate the logic in a static class, and via an event notify the page. Cautions should be taken in handling this scheme so as not to leave lost links.
 
-# Blazor
+## Blazor
 
-Compilamos para Emscripten, para esto cambiamos el tipo de librería a estático y compilamos con el comando correspondiente. Esto genera un archivo .a que es el que agregamos como referencia nativa al proyecto Blazor. Vea los comentarios del archivo Cargo.toml para los detalles.
+We compile for Emscripten, for this we change the type of library to static and compile with the corresponding command. This generates a .a file which is the one we add as a native reference to the Blazor project. See the comments in the Cargo.toml file for details.
 
-El archivo de proyecto de Blazor contiene las siguientes directivas:
+The Blazor project file contains the following directives:
 
 ```
 <PropertyGroup>
-  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  <WasmBuildNative>true</WasmBuildNative>
+<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+<WasmBuildNative>true</WasmBuildNative>
 </PropertyGroup>
 
 <ItemGroup>
-  <NativeFileReference Include="..\..\rstlib\target\wasm32-unknown-emscripten\release\librstlib.a" />
+<NativeFileReference Include="..\..\rstlib\target\wasm32-unknown-emscripten\release\librstlib.a" />
 </ItemGroup>
 ```
 
-La ruta de la referencia nativa corresponde a que existe en el mismo directorio de la solución Blazor, y no tendremos que estar moviendo el archivo librstlib.a
+The path of the native reference corresponds to the fact that it exists in the same directory as the Blazor solution, and we will not have to be moving the librstlib.a file.
 
-En cada caso tratado acá he dispuesto un ejemplo en Blazor, repartido en las páginas del SPA. En los casos especiales de código unsafe, creé una clase con los estáticos, y a través de un evento se pueden leer respuestas de los eventos o devoluciones de llamadas. En general sería poco usual que desearíamos pasar funciones de C# a Rust en Wasm, no obstante acá se demuestra como se puede hacer. Puede consultar el repositorio acá: [BlazorRustExperiments](https://github.com/harveytriana/BlazorRustExperiments)
+In each case treated here I have provided an example in Blazor, distributed in the pages of the SPA. In the special cases of unsafe code, I created a class with the statics, and through an event you can read responses from the events or callbacks. In general it would be unusual if we would want to pass functions from C# to Rust in Wasm, however here we show how it can be done. You can check the repository here: [BlazorRustExperiments](https://github.com/harveytriana/BlazorRustExperiments)
 
-# Conclusiones
+The path of the native reference corresponds to the fact that it exists in the same directory as the Blazor solution, and we will not have to be moving the librstlib.a file. Furthermore, I add that path to a global constants file,
 
-¿Hasta dónde nos llevará este nuevo poder? La evolución de Blazor es ciertamente abrumadora, no obstante, la característica de las dependencias nativas es notoriamente relevante. Desde el anuncio de Denis Roth en su blog, bajo el título «Soporte de dependencias nativas para aplicaciones Blazor WebAssembly» los programadores de Blazor sabemos que esto nos va a llevar lejos. 
+```csharp
+namespace BlazorRustExperiments;
 
-Ciertamente no es difícil usar código Rust en C#, en este artículo demostraré varios aspectos fundamentales de cómo se puede establecer esa relación. Un proceso matemático exhaustivo que debiera ejecutarse en el cliente, se puede resolver desde una librería nativa con un alto desempeño. 
+public static class Global
+{
+    public const string RLIB = "librstlib";
+}
+```
+
+To improve the design, add the image that represents Rust on the cover, and the logo. To present results I used a Blazor component written to emulate a console output.
+
+<img src="file:///C:/_study/Blazor/Articles/BlazorRustExperiments/Screens/index.png" data-align="center">
+
+The Board component driving results:
+
+<img src="file:///C:/_study/Blazor/Articles/BlazorRustExperiments/Screens/bz_cb.png" data-align="center">
+
+The development possibilities are immense, we work naturally from C#, calling Rust code. Simply great.
+
+## Conclusions
+
+How far will this new power take us? The evolution of Blazor is certainly overwhelming, however, the characteristic of native dependencies is notoriously relevant. Since Denis Roth's blog post, *Native dependency support for Blazor WebAssembly applications*, Blazor developers know this is going to take us a long way.
+
+It is certainly not difficult to use Rust code in C#, in this article I will demonstrate several fundamental aspects of how that relationship can be established. An exhaustive mathematical process that should be executed on the client, can be solved from a native library with high performance.
 
 ---
 
-### Referencias
+### References
 
-1. [Rust]([https://www.rust-lang.org/](https://www.rust-lang.org/)
-2. [Take your first steps with Rust]([https://docs.microsoft.com/en-us/learn/paths/rust-first-steps/](https://docs.microsoft.com/en-us/learn/paths/rust-first-steps/)
+1. [Rust](https://www.rust-lang.org/)
+2. [Rust first steps](https://docs.microsoft.com/en-us/learn/paths/rust-first-steps/)
 3. [Rust and WebAssembly](https://www.hellorust.com/setup/emscripten/)
-4. [Emscripten]([https://emscripten.org/)
+4. [Emscripten](https://emscripten.org/)
+5. [Platform Invoke](https://docs.microsoft.com/en-us/dotnet/standard/native-interop/pinvoke)
+
+---
+
+Published: 2021-11-29
+
+Source: https://www.blazorspread.net/blogview/rust-in-blazor-webassembly
+Spanish: https://www.blazorspread.net/blogview/rust-en-blazor-webassembly
