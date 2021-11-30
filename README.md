@@ -70,7 +70,7 @@ If we are going to work with a console, then the static library does not create 
 
 The configuration file with the characteristics described is as follows
 
-```
+```python
 [package]
 name = "rstlib"
 version = "0.1.0"
