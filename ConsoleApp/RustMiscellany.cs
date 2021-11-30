@@ -33,7 +33,7 @@ class RustMiscellany
 
         Console.WriteLine("From Rust Library, Hypotenuse({0}, {1}) = {2}", x, y, h);
 
-        Console.WriteLine("\nCOUNTER FROM CLOSURE");
+        Console.WriteLine("\nCOUNTER FROM ~CLOSURE");
         Console.WriteLine("Counter: {0}", counter());
         Console.WriteLine("Counter: {0}", counter());
         Console.WriteLine("Counter: {0}", counter());

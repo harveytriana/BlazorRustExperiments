@@ -2,17 +2,18 @@
 
 Console.WriteLine("CALLING RUST EXPERIMENTS\n");
 
-//RustMiscellany.Run();
+RustMiscellany.Run();
 //RustStruct.Run();
 //RustJson.Run();
 //RustCallback.Run();
 
 //new RustEvents().Run();
 
-unsafe {
-    //new RustCallbackWasm().Run();
-    new RustEventsWasm().Run();
-}
+//unsafe {
+//    new RustCallbackWasm().Run();
+//    new RustEventsWasm().Run();
+//}
 
+// others
 // new RustEvents2().Run();
 

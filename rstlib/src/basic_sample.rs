@@ -24,3 +24,8 @@ pub fn counter() -> i32 {
         return COUNTER;
     }
 }
+
+#[no_mangle]
+pub extern "C" fn hello_world2() {
+    println!("Hello World!");
+}
