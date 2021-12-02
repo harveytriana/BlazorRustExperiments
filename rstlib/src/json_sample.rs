@@ -6,7 +6,7 @@ use std::ffi::CStr;
 use std::ffi::CString;
 use std::os::raw::c_char;
 
-// STRUT SAMPLE
+// STRUCT SAMPLE
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Person {
     person_id: i32,
